@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chive Arcade — Tiny browser games, new every Friday</title>
+<meta name="description" content="Tiny, touch-first browser games for quick score chasing. A new game drops every Friday. Play instantly, beat your best.">
+<meta name="theme-color" content="#080B18">
+<link rel="icon" type="image/png" href="emblem.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080B18; --panel:#111A38; --cyan:#53E6FF; --yellow:#FFD85A; --pink:#FF4D68;
+    --text:#EAF2FF; --muted:#9AA7C7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    line-height:1.6; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(83,230,255,.12), transparent),
+      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(255,77,104,.10), transparent);
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px; position:relative; z-index:1}
+
+  header{padding:22px 0; display:flex; align-items:center; justify-content:space-between}
+  .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text)}
+  .brand img{width:44px; height:44px; border-radius:12px; box-shadow:0 0 18px rgba(83,230,255,.35)}
+  .brand span{font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:2px; font-size:15px}
+  .brand span em{font-style:normal; color:var(--cyan)}
+  .nav-cta{
+    font-family:'Orbitron',sans-serif; font-size:12px; letter-spacing:1px;
+    color:var(--bg); background:var(--yellow); padding:10px 18px; border-radius:999px;
+    text-decoration:none; font-weight:800;
+  }
+
+  .hero{text-align:center; padding:56px 0 40px}
+  .hero img.emblem{
+    width:132px; height:132px; border-radius:28px; margin-bottom:22px;
+    box-shadow:0 0 40px rgba(83,230,255,.35), 0 0 90px rgba(255,77,104,.15);
+  }
+  h1{
+    font-family:'Orbitron',sans-serif; font-weight:800; font-size:clamp(30px,6vw,52px);
+    letter-spacing:3px; line-height:1.15; margin-bottom:14px;
+  }
+  h1 .c1{color:var(--cyan)} h1 .c2{color:var(--pink)}
+  .tagline{color:var(--muted); font-size:clamp(15px,2.6vw,18px); max-width:560px; margin:0 auto 30px}
+  .tagline strong{color:var(--yellow); font-weight:600}
+  .ctas{display:flex; gap:14px; justify-content:center; flex-wrap:wrap}
+  .btn{
+    font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:1px; font-size:14px;
+    padding:15px 30px; border-radius:999px; text-decoration:none; display:inline-block;
+    transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--cyan); color:#06121A; box-shadow:0 6px 26px rgba(83,230,255,.35)}
+  .btn-ghost{border:2px solid var(--pink); color:var(--pink)}
+
+  .stats{
+    display:flex; justify-content:center; gap:clamp(18px,5vw,54px);
+    padding:34px 0; border-top:1px solid rgba(83,230,255,.15); border-bottom:1px solid rgba(83,230,255,.15);
+    margin:10px 0 0; flex-wrap:wrap;
+  }
+  .stat{text-align:center}
+  .stat b{font-family:'Orbitron',sans-serif; font-size:clamp(22px,4vw,32px); color:var(--yellow); display:block}
+  .stat small{color:var(--muted); font-size:13px; letter-spacing:.5px}
+
+  section{padding:52px 0}
+  h2{
+    font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:2px;
+    font-size:clamp(20px,4vw,28px); text-align:center; margin-bottom:8px;
+  }
+  h2 .c{color:var(--cyan)}
+  .sub{text-align:center; color:var(--muted); margin-bottom:28px; font-size:15px}
+
+  .games{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px}
+  .game{
+    background:var(--panel); border:1px solid rgba(83,230,255,.14); border-radius:16px;
+    padding:22px 14px; text-align:center; text-decoration:none; color:var(--text);
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .game:hover{transform:translateY(-3px); border-color:var(--cyan)}
+  .game .dot{width:14px; height:14px; border-radius:50%; margin:0 auto 12px; background:var(--cyan); box-shadow:0 0 12px var(--cyan)}
+  .game:nth-child(2n) .dot{background:var(--pink); box-shadow:0 0 12px var(--pink)}
+  .game:nth-child(3n) .dot{background:var(--yellow); box-shadow:0 0 12px var(--yellow)}
+  .game b{font-family:'Orbitron',sans-serif; font-size:14px; letter-spacing:1px; display:block; margin-bottom:4px}
+  .game small{color:var(--muted); font-size:12px}
+  .more{text-align:center; margin-top:22px}
+  .more a{color:var(--cyan); text-decoration:none; font-weight:600; font-size:15px}
+
+  .signup{
+    background:linear-gradient(135deg, var(--panel), #0B1230);
+    border:1px solid rgba(255,216,90,.25); border-radius:22px;
+    padding:clamp(28px,5vw,48px); text-align:center;
+  }
+  .signup h2{margin-bottom:6px}
+  .signup p{color:var(--muted); margin-bottom:24px; font-size:15px}
+  form{display:flex; gap:10px; max-width:480px; margin:0 auto; flex-wrap:wrap; justify-content:center}
+  input[type=email]{
+    flex:1 1 240px; padding:15px 20px; border-radius:999px; border:2px solid rgba(83,230,255,.3);
+    background:#0A0F22; color:var(--text); font-size:15px; outline:none;
+  }
+  input[type=email]:focus{border-color:var(--cyan)}
+  button{
+    font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:1px; font-size:13px;
+    background:var(--pink); color:#fff; border:none; border-radius:999px;
+    padding:15px 28px; cursor:pointer; box-shadow:0 6px 24px rgba(255,77,104,.35);
+  }
+  button:hover{filter:brightness(1.1)}
+  .form-note{font-size:13px; color:var(--muted); margin-top:14px; min-height:20px}
+  .form-note.ok{color:var(--cyan)}
+
+  .socials{display:flex; justify-content:center; gap:12px; flex-wrap:wrap; padding:10px 0 30px}
+  .socials a{
+    color:var(--text); text-decoration:none; font-size:14px; font-weight:600;
+    border:1px solid rgba(83,230,255,.25); padding:10px 20px; border-radius:999px;
+    transition:border-color .15s ease;
+  }
+  .socials a:hover{border-color:var(--yellow); color:var(--yellow)}
+
+  footer{text-align:center; color:var(--muted); font-size:13px; padding:24px 0 40px; border-top:1px solid rgba(83,230,255,.12)}
+  footer .heart{color:var(--pink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="brand" href="#">
+      <img src="emblem.png" alt="Chive Arcade emblem">
+      <span>CHIVE <em>ARCADE</em></span>
+    </a>
+    <a class="nav-cta" href="https://chive-arcade.itch.io">PLAY FREE</a>
+  </header>
+
+  <div class="hero">
+    <img class="emblem" src="emblem.png" alt="Chive Arcade">
+    <h1><span class="c1">TINY GAMES.</span><br><span class="c2">BIG SCORES.</span></h1>
+    <p class="tagline">Tiny, touch-first browser games for quick score chasing. <strong>A new game drops every Friday.</strong> Play instantly, beat your best.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://chive-arcade.itch.io">PLAY THE GAMES</a>
+      <a class="btn btn-ghost" href="#alerts">GET FRIDAY ALERTS</a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>30</b><small>games and counting</small></div>
+    <div class="stat"><b>Weekly</b><small>new drop every Friday</small></div>
+    <div class="stat"><b>Free</b><small>play in your browser</small></div>
+  </div>
+
+  <section>
+    <h2>THIS WEEK'S <span class="c">LINEUP</span></h2>
+    <p class="sub">A few player favorites. Tap any game to play it right now.</p>
+    <div class="games">
+      <a class="game" href="https://chive-arcade.itch.io"><span class="dot"></span><b>WARD</b><small>defend the line</small></a>
+      <a class="game" href="https://chive-arcade.itch.io"><span class="dot"></span><b>FLIP</b><small>one-tap chaos</small></a>
+      <a class="game" href="https://chive-arcade.itch.io"><span class="dot"></span><b>KEEP UP</b><small>don't drop it</small></a>
+      <a class="game" href="https://chive-arcade.itch.io"><span class="dot"></span><b>RIFT CUT</b><small>slice the rift</small></a>
+      <a class="game" href="https://chive-arcade.itch.io"><span class="dot"></span><b>TIMING RING</b><small>perfect timing</small></a>
+      <a class="game" href="https://chive-arcade.itch.io"><span class="dot"></span><b>EVERGREEN EMPIRE</b><small>grow it all</small></a>
+    </div>
+    <p class="more"><a href="https://chive-arcade.itch.io">Browse all 30 games →</a></p>
+  </section>
+
+  <section id="alerts">
+    <div class="signup">
+      <h2>NEVER MISS A <span class="c">FRIDAY DROP</span></h2>
+      <p>One short email when a new game lands. No spam, no selling your address, unsubscribe anytime.</p>
+      <form id="signup-form">
+        <input type="email" id="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+        <button type="submit">NOTIFY ME</button>
+      </form>
+      <p class="form-note" id="form-note"></p>
+    </div>
+  </section>
+
+  <div class="socials">
+    <a href="https://chive-arcade.itch.io">itch.io</a>
+    <a href="https://twitter.com/ChiveArcade">X / Twitter</a>
+    <a href="https://instagram.com/chivearcade">Instagram</a>
+    <a href="https://github.com/chive55">GitHub</a>
+  </div>
+
+  <footer>
+    <p>CHIVE ARCADE <span class="heart">♥</span> <span id="year"></span> · Made for quick score chasing</p>
+  </footer>
+
+</div>
+<script>
+/* ============================================================
+   EMAIL SIGNUP CONFIG
+   To activate launch alerts: create a free form at formspree.io
+   (point it at chivearcade@gmail.com), then paste your endpoint
+   below, e.g. "https://formspree.io/f/xabc1234".
+   ============================================================ */
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const form = document.getElementById('signup-form');
+const note = document.getElementById('form-note');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (!email) return;
+
+  // Endpoint not configured yet: be honest, don't fake it.
+  if (FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
+    note.textContent = "Launch alerts go live very soon — follow @ChiveArcade so you don't miss it.";
+    note.classList.remove('ok');
+    return;
+  }
+
+  try {
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (res.ok) {
+      note.textContent = "You're in! Watch your inbox on Fridays.";
+      note.classList.add('ok');
+      form.reset();
+    } else {
+      throw new Error('bad response');
+    }
+  } catch (err) {
+    note.textContent = "Hmm, that didn't go through. Try again in a bit.";
+    note.classList.remove('ok');
+  }
+});
+</script>
+</body>
+</html>
