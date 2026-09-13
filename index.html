@@ -195,12 +195,13 @@
 </div>
 <script>
 /* ============================================================
-   EMAIL SIGNUP CONFIG
-   To activate launch alerts: create a free form at formspree.io
-   (point it at chivearcade@gmail.com), then paste your endpoint
-   below, e.g. "https://formspree.io/f/xabc1234".
+   EMAIL SIGNUP — wired to the "Chive Arcade — Friday Drop
+   Alerts" Google Form on chivearcade@gmail.com. Responses land
+   in the form's linked sheet. To change the destination, create
+   a new form and update FORM_ACTION + EMAIL_ENTRY below.
    ============================================================ */
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeTgGqTS7GVlijNa_qedXI44pLTlNr7iG4zR-SxDbUgW_QdWA/formResponse";
+const EMAIL_ENTRY = "entry.522378155";
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -212,26 +213,14 @@ form.addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value.trim();
   if (!email) return;
 
-  // Endpoint not configured yet: be honest, don't fake it.
-  if (FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
-    note.textContent = "Launch alerts go live very soon — follow @ChiveArcade so you don't miss it.";
-    note.classList.remove('ok');
-    return;
-  }
-
   try {
-    const res = await fetch(FORMSPREE_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    if (res.ok) {
-      note.textContent = "You're in! Watch your inbox on Fridays.";
-      note.classList.add('ok');
-      form.reset();
-    } else {
-      throw new Error('bad response');
-    }
+    const body = new URLSearchParams();
+    body.append(EMAIL_ENTRY, email);
+    // Google Forms doesn't send CORS headers; no-cors still delivers it.
+    await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body });
+    note.textContent = "You're in! Watch your inbox on Fridays.";
+    note.classList.add('ok');
+    form.reset();
   } catch (err) {
     note.textContent = "Hmm, that didn't go through. Try again in a bit.";
     note.classList.remove('ok');
