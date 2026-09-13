@@ -6,7 +6,7 @@
 <title>Chive Arcade — Tiny browser games, new every Friday</title>
 <meta name="description" content="Tiny, touch-first browser games for quick score chasing. A new game drops every Friday. Play instantly, beat your best.">
 <meta name="theme-color" content="#080B18">
-<link rel="icon" type="image/png" href="emblem.png">
+<link rel="icon" type="image/png" href="mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
 
   header{padding:22px 0; display:flex; align-items:center; justify-content:space-between}
   .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text)}
-  .brand img{width:44px; height:44px; border-radius:12px; box-shadow:0 0 18px rgba(83,230,255,.35)}
+  .brand img{height:40px; width:auto; filter:drop-shadow(0 0 10px rgba(83,230,255,.35))}
   .brand span{font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:2px; font-size:15px}
   .brand span em{font-style:normal; color:var(--cyan)}
   .nav-cta{
@@ -41,9 +41,9 @@
   }
 
   .hero{text-align:center; padding:56px 0 40px}
-  .hero img.emblem{
-    width:132px; height:132px; border-radius:28px; margin-bottom:22px;
-    box-shadow:0 0 40px rgba(83,230,255,.35), 0 0 90px rgba(255,77,104,.15);
+  .hero img.logo{
+    width:min(300px,68vw); height:auto; margin-bottom:8px;
+    filter:drop-shadow(0 0 26px rgba(83,230,255,.25));
   }
   h1{
     font-family:'Orbitron',sans-serif; font-weight:800; font-size:clamp(30px,6vw,52px);
@@ -133,14 +133,14 @@
 
   <header>
     <a class="brand" href="#">
-      <img src="emblem.png" alt="Chive Arcade emblem">
+      <img src="mark.png" alt="Chive Arcade">
       <span>CHIVE <em>ARCADE</em></span>
     </a>
     <a class="nav-cta" href="https://chive-arcade.itch.io">PLAY FREE</a>
   </header>
 
   <div class="hero">
-    <img class="emblem" src="emblem.png" alt="Chive Arcade">
+    <img class="logo" src="logo.png" alt="Chive Arcade">
     <h1><span class="c1">TINY GAMES.</span><br><span class="c2">BIG SCORES.</span></h1>
     <p class="tagline">Tiny, touch-first browser games for quick score chasing. <strong>A new game drops every Friday.</strong> Play instantly, beat your best.</p>
     <div class="ctas">
