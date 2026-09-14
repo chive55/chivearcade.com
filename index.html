@@ -195,13 +195,12 @@
 </div>
 <script>
 /* ============================================================
-   EMAIL SIGNUP — wired to the "Chive Arcade — Friday Drop
-   Alerts" Google Form on chivearcade@gmail.com. Responses land
-   in the form's linked sheet. To change the destination, create
-   a new form and update FORM_ACTION + EMAIL_ENTRY below.
+   EMAIL SIGNUP — wired to the "Never miss a Friday drop"
+   Google Form on chivearcade@gmail.com. The form uses Google's
+   own email collection, so we submit via the emailAddress field.
+   Responses land in the form's linked sheet.
    ============================================================ */
 const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdmwXJ8wwJ_ZBNA7S05PD2wGMTrnQuoLUDjDU2f65m7AGUEcg/formResponse";
-const EMAIL_ENTRY = "entry.1045781291";
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -215,7 +214,7 @@ form.addEventListener('submit', async (e) => {
 
   try {
     const body = new URLSearchParams();
-    body.append(EMAIL_ENTRY, email);
+    body.append('emailAddress', email);
     // Google Forms doesn't send CORS headers; no-cors still delivers it.
     await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body });
     note.textContent = "You're in! Watch your inbox on Fridays.";
