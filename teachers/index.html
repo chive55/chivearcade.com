@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Classroom Games for Teachers | Chive Arcade</title>
+<meta name="description" content="Free single-file math games for K-2 classrooms. No logins, no ads, works offline on Chromebooks. Join the teacher list and get the first game free.">
+<meta name="theme-color" content="#080B18">
+<link rel="icon" type="image/png" href="../mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080B18; --panel:#111A38; --cyan:#53E6FF; --yellow:#FFD85A; --pink:#FF4D68;
+    --text:#EAF2FF; --muted:#9AA7C7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    line-height:1.6; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(83,230,255,.12), transparent),
+      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(255,77,104,.10), transparent);
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px; position:relative; z-index:1}
+
+  header{padding:22px 0; display:flex; align-items:center; justify-content:space-between}
+  .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text)}
+  .brand img{height:40px; width:auto; filter:drop-shadow(0 0 10px rgba(83,230,255,.35))}
+  .brand span{font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:2px; font-size:15px}
+  .brand span em{font-style:normal; color:var(--cyan)}
+  .nav-cta{
+    font-family:'Orbitron',sans-serif; font-size:12px; letter-spacing:1px;
+    color:var(--bg); background:var(--yellow); padding:10px 18px; border-radius:999px;
+    text-decoration:none; font-weight:800;
+  }
+
+  .hero{text-align:center; padding:56px 0 36px}
+  .kicker{
+    display:inline-block; font-family:'Orbitron',sans-serif; font-size:12px; letter-spacing:3px;
+    color:var(--yellow); border:1px solid rgba(255,216,90,.4); border-radius:999px;
+    padding:8px 18px; margin-bottom:20px;
+  }
+  h1{
+    font-family:'Orbitron',sans-serif; font-weight:800; font-size:clamp(30px,6vw,52px);
+    letter-spacing:3px; line-height:1.15; margin-bottom:14px;
+  }
+  h1 .c1{color:var(--cyan)} h1 .c2{color:var(--pink)}
+  .tagline{color:var(--muted); font-size:clamp(15px,2.6vw,18px); max-width:600px; margin:0 auto 8px}
+  .tagline strong{color:var(--text); font-weight:600}
+
+  .offer{
+    background:linear-gradient(135deg, var(--panel), #0B1230);
+    border:1px solid rgba(255,216,90,.25); border-radius:22px;
+    padding:clamp(28px,5vw,44px); text-align:center; margin:36px 0;
+  }
+  .offer h2{
+    font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:2px;
+    font-size:clamp(20px,4vw,28px); margin-bottom:8px;
+  }
+  .offer h2 .c{color:var(--yellow)}
+  .offer p{color:var(--muted); margin-bottom:6px; font-size:15px; max-width:560px; margin-left:auto; margin-right:auto}
+  .offer p strong{color:var(--text)}
+  form{display:flex; gap:10px; max-width:480px; margin:22px auto 0; flex-wrap:wrap; justify-content:center}
+  input[type=email]{
+    flex:1 1 240px; padding:15px 20px; border-radius:999px; border:2px solid rgba(83,230,255,.3);
+    background:#0A0F22; color:var(--text); font-size:16px; outline:none;
+  }
+  input[type=email]:focus{border-color:var(--cyan)}
+  button{
+    font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:1px; font-size:13px;
+    background:var(--pink); color:#fff; border:none; border-radius:999px;
+    padding:15px 28px; cursor:pointer; box-shadow:0 6px 24px rgba(255,77,104,.35);
+  }
+  button:hover{filter:brightness(1.1)}
+  .form-note{font-size:14px; color:var(--muted); margin-top:14px; min-height:22px}
+  .form-note.ok{color:var(--cyan); font-weight:600}
+
+  .points{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:10px 0 20px}
+  .point{
+    background:var(--panel); border:1px solid rgba(83,230,255,.14); border-radius:16px;
+    padding:24px 20px; text-align:center;
+  }
+  .point .ico{font-size:30px; margin-bottom:10px}
+  .point b{font-family:'Orbitron',sans-serif; font-size:14px; letter-spacing:1px; display:block; margin-bottom:6px; color:var(--cyan)}
+  .point p{color:var(--muted); font-size:14px}
+
+  section{padding:40px 0}
+  h2.sec{
+    font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:2px;
+    font-size:clamp(20px,4vw,28px); text-align:center; margin-bottom:8px;
+  }
+  h2.sec .c{color:var(--cyan)}
+  .sub{text-align:center; color:var(--muted); margin-bottom:24px; font-size:15px; max-width:600px; margin-left:auto; margin-right:auto}
+
+  footer{text-align:center; color:var(--muted); font-size:13px; padding:24px 0 40px; border-top:1px solid rgba(83,230,255,.12)}
+  footer a{color:var(--cyan); text-decoration:none}
+  footer .heart{color:var(--pink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="brand" href="../">
+      <img src="../mark.png" alt="Chive Arcade">
+      <span>CHIVE <em>ARCADE</em></span>
+    </a>
+    <a class="nav-cta" href="https://chive-arcade.itch.io">PLAY FREE</a>
+  </header>
+
+  <div class="hero">
+    <span class="kicker">FOR K-2 TEACHERS</span>
+    <h1><span class="c1">CLASSROOM GAMES</span><br><span class="c2">THAT JUST WORK</span></h1>
+    <p class="tagline">Single-file math games built for real classrooms. <strong>No student logins. No ads.</strong> They run offline on Chromebooks, even when the school wifi gives up.</p>
+  </div>
+
+  <div class="offer" id="signup">
+    <h2>GET THE FIRST GAME <span class="c">FREE</span></h2>
+    <p><strong>Coin Counting Cascade:</strong> students catch coins to hit a target amount. Four difficulty levels in one file, aligned to Common Core 2.MD.C.8.</p>
+    <p>Join the teacher list and get it free the day it launches, plus every classroom game after that.</p>
+    <form id="teacher-form">
+      <input type="email" id="email" name="email" placeholder="you@school.org" required aria-label="Email address" autocomplete="email">
+      <button type="submit">SEND ME THE FREE GAME</button>
+    </form>
+    <p class="form-note" id="form-note"></p>
+  </div>
+
+  <section>
+    <h2 class="sec">BUILT FOR <span class="c">REAL CLASSROOMS</span></h2>
+    <p class="sub">Made by an indie game developer with 30 shipped browser games, designed around how classrooms actually work.</p>
+    <div class="points">
+      <div class="point">
+        <div class="ico">📁</div>
+        <b>ONE FILE, ZERO SETUP</b>
+        <p>Download once, double-click, and it plays in Chrome. Nothing to install, no accounts for students.</p>
+      </div>
+      <div class="point">
+        <div class="ico">🏫</div>
+        <b>CENTER-READY</b>
+        <p>Perfect for math centers, whole-group lessons on the interactive whiteboard, or early finishers.</p>
+      </div>
+      <div class="point">
+        <div class="ico">📏</div>
+        <b>STANDARDS ALIGNED</b>
+        <p>Every game lists its Common Core alignment, grade levels, and a teacher guide with classroom ideas.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><a href="../">← Back to Chive Arcade</a></p>
+    <p style="margin-top:10px">CHIVE ARCADE <span class="heart">♥</span> <span id="year"></span> · One short email per game launch. No spam, unsubscribe anytime.</p>
+  </footer>
+
+</div>
+<script>
+/* ============================================================
+   TEACHER EMAIL SIGNUP — wired to the "Teacher Games Email Signup"
+   Google Form on chivearcade@gmail.com. Uses Google's own email
+   collection, so we submit via the emailAddress field.
+   Responses land in the form's linked sheet (separate from the
+   Friday-drop player newsletter).
+   ============================================================ */
+const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSfQbgrlGK0092YZH5aXaf1rKHm7b9tl1exUiDZah983xZOJcw/formResponse";
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const form = document.getElementById('teacher-form');
+const note = document.getElementById('form-note');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (!email) return;
+
+  try {
+    const body = new URLSearchParams();
+    body.append('emailAddress', email);
+    // Google Forms doesn't send CORS headers; no-cors still delivers it.
+    await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body });
+    note.textContent = "You're on the list! Watch your inbox when the free game launches.";
+    note.classList.add('ok');
+    form.reset();
+  } catch (err) {
+    note.textContent = "Hmm, that didn't go through. Try again in a bit.";
+    note.classList.remove('ok');
+  }
+});
+</script>
+</body>
+</html>
