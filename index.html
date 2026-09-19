@@ -116,12 +116,6 @@
   .form-note{font-size:13px; color:var(--muted); margin-top:14px; min-height:20px}
   .form-note.ok{color:var(--cyan)}
 
-  .leadmagnet{border-color:rgba(83,230,255,.35)}
-  .leadmagnet strong{color:var(--text)}
-  #leadmagnet-download .btn{font-size:13px; padding:14px 26px}
-  .checklist-link{display:inline-block; margin-top:18px; color:var(--cyan); font-size:14px; text-decoration:none; font-weight:600}
-  .checklist-link:hover{color:var(--yellow)}
-
   .socials{display:flex; justify-content:center; gap:12px; flex-wrap:wrap; padding:10px 0 30px}
   .socials a{
     color:var(--text); text-decoration:none; font-size:14px; font-weight:600;
@@ -153,7 +147,6 @@
       <a class="btn btn-primary" href="https://chive-arcade.itch.io">PLAY THE GAMES</a>
       <a class="btn btn-ghost" href="#alerts">GET FRIDAY ALERTS</a>
     </div>
-    <a class="checklist-link" href="#free-checklist">Making games? Get the free 7-ideas weekend checklist &rarr;</a>
   </div>
 
   <div class="stats">
@@ -166,7 +159,7 @@
     <h2>THIS WEEK'S <span class="c">LINEUP</span></h2>
     <p class="sub">A few player favorites. Tap any game to play it right now.</p>
     <div class="games">
-      <a class="game" href="https://chive-arcade.itch.io/ward"><span class="dot"></span><b>WARD</b><small>defend the line</small></a>
+      <a class="game" href="https://chive-arcade.itch.io/ward-chive"><span class="dot"></span><b>WARD</b><small>defend the line</small></a>
       <a class="game" href="https://chive-arcade.itch.io/flip"><span class="dot"></span><b>FLIP</b><small>one-tap chaos</small></a>
       <a class="game" href="https://chive-arcade.itch.io/keep-up"><span class="dot"></span><b>KEEP UP</b><small>don't drop it</small></a>
       <a class="game" href="https://chive-arcade.itch.io/rift-cut"><span class="dot"></span><b>RIFT CUT</b><small>slice the rift</small></a>
@@ -174,21 +167,6 @@
       <a class="game" href="https://chive-arcade.itch.io/evergreen-empire"><span class="dot"></span><b>EVERGREEN EMPIRE</b><small>grow it all</small></a>
     </div>
     <p class="more"><a href="https://chive-arcade.itch.io">Browse all 30 games →</a></p>
-  </section>
-
-  <section id="free-checklist">
-    <div class="signup leadmagnet">
-      <h2>MAKE YOUR FIRST <span class="c">GAME</span></h2>
-      <p><strong>Free checklist:</strong> 7 Game Ideas You Can Actually Finish in a Weekend. Each idea scoped with its one mechanic, build list, cut list, and tuning numbers. From the studio that ships a browser game every week.</p>
-      <form id="leadmagnet-form">
-        <input type="email" id="leadmagnet-email" name="email" placeholder="you@example.com" required aria-label="Email address">
-        <button type="submit">SEND MY CHECKLIST</button>
-      </form>
-      <p class="form-note" id="leadmagnet-note"></p>
-      <p id="leadmagnet-download" style="display:none; margin-top:16px;">
-        <a class="btn btn-primary" href="/7-game-ideas.pdf" download>DOWNLOAD THE CHECKLIST (PDF)</a>
-      </p>
-    </div>
   </section>
 
   <section id="alerts">
@@ -245,32 +223,6 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     note.textContent = "Hmm, that didn't go through. Try again in a bit.";
     note.classList.remove('ok');
-  }
-});
-
-/* Lead-magnet form: same list as the Friday alerts signup.
-   The checklist is the incentive, so we reveal the PDF
-   download the moment the signup succeeds. */
-const lmForm = document.getElementById('leadmagnet-form');
-const lmNote = document.getElementById('leadmagnet-note');
-const lmDl = document.getElementById('leadmagnet-download');
-
-lmForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('leadmagnet-email').value.trim();
-  if (!email) return;
-
-  try {
-    const body = new URLSearchParams();
-    body.append('emailAddress', email);
-    await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body });
-    lmNote.textContent = "You're in! Your free checklist is ready below.";
-    lmNote.classList.add('ok');
-    lmDl.style.display = 'block';
-    lmForm.reset();
-  } catch (err) {
-    lmNote.textContent = "Hmm, that didn't go through. Try again in a bit.";
-    lmNote.classList.remove('ok');
   }
 });
 </script>
