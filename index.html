@@ -3,10 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chive Arcade — Tiny browser games, new every Friday</title>
+<title>Chive Arcade: Free Tiny Games You Can Play on Your Phone</title>
 <meta name="description" content="Tiny, touch-first browser games for quick score chasing. A new game drops every Friday. Play instantly, beat your best.">
 <meta name="theme-color" content="#080B18">
-<link rel="icon" type="image/png" href="mark.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://chivearcade.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chive Arcade">
+<meta property="og:title" content="Chive Arcade: Free Tiny Games You Can Play on Your Phone">
+<meta property="og:description" content="Tiny, touch-first browser games for quick score chasing. A new game drops every Friday. Play instantly, beat your best.">
+<meta property="og:url" content="https://chivearcade.com/">
+<meta property="og:image" content="https://hub.chivearcade.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chive Arcade: Free Tiny Games You Can Play on Your Phone">
+<meta name="twitter:description" content="Tiny, touch-first browser games for quick score chasing. A new game drops every Friday. Play instantly, beat your best.">
+<meta name="twitter:image" content="https://hub.chivearcade.com/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,7 +62,9 @@
     font-family:'Orbitron',sans-serif; font-weight:800; font-size:clamp(30px,6vw,52px);
     letter-spacing:3px; line-height:1.15; margin-bottom:14px;
   }
-  h1 .c1{color:var(--cyan)} h1 .c2{color:var(--pink)}
+  h1 .c1,.h1 .c1{color:var(--cyan)} h1 .c2,.h1 .c2{color:var(--pink)}
+  h1.lead{font-family:Inter,sans-serif;font-size:clamp(20px,3.4vw,30px);line-height:1.25;letter-spacing:0;margin:0 auto 14px;max-width:640px}
+  .hub-cta{display:inline-block;margin-top:14px;font-size:1.1em}
   .tagline{color:var(--muted); font-size:clamp(15px,2.6vw,18px); max-width:560px; margin:0 auto 30px}
   .tagline strong{color:var(--yellow); font-weight:600}
   .ctas{display:flex; gap:14px; justify-content:center; flex-wrap:wrap}
@@ -141,10 +156,11 @@
 
   <div class="hero">
     <img class="logo" src="logo.png" alt="Chive Arcade">
-    <h1><span class="c1">TINY GAMES.</span><br><span class="c2">BIG SCORES.</span></h1>
+    <h1 class="lead">Tiny games you can play on your phone. Free, right in your browser.</h1>
+    <p class="h1"><span class="c1">TINY GAMES.</span><br><span class="c2">BIG SCORES.</span></p>
     <p class="tagline">Tiny, touch-first browser games for quick score chasing. <strong>A new game drops every Friday.</strong> Play instantly, beat your best.</p>
     <div class="ctas">
-      <a class="btn btn-primary" href="https://chive-arcade.itch.io">PLAY THE GAMES</a>
+      <a class="btn btn-primary hub-cta" href="https://hub.chivearcade.com/">See all 27 games on the hub →</a>
       <a class="btn btn-ghost" href="#alerts">GET FRIDAY ALERTS</a>
     </div>
   </div>
@@ -166,7 +182,7 @@
       <a class="game" href="https://chive-arcade.itch.io/timing-ring"><span class="dot"></span><b>TIMING RING</b><small>perfect timing</small></a>
       <a class="game" href="https://chive-arcade.itch.io/evergreen-empire"><span class="dot"></span><b>EVERGREEN EMPIRE</b><small>grow it all</small></a>
     </div>
-    <p class="more"><a href="https://chive-arcade.itch.io">Browse all 30 games →</a></p>
+    <p class="more"><a href="https://hub.chivearcade.com/">See all 27 games on the hub →</a></p>
   </section>
 
   <section id="alerts">
