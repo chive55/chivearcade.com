@@ -160,6 +160,7 @@
 .vb-clip figcaption{font-size:12px;color:#9cafb6;padding:4px 2px}
 @media(max-width:820px){.vb-hero{padding:0;grid-template-columns:1fr}.vb-strip{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:520px){.vb-strip{grid-template-columns:1fr}.vb-clip:nth-child(n+2){display:none}.vb-btn{width:100%;text-align:center}}
+.vb-gameplay{padding:8px 0 28px}.vb-gameplay .vb-strip{padding:0}.mini{padding:28px 0}.mini a{color:var(--cyan)}.signup-sm{padding:24px}.signup-sm h2{font-size:20px}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"VideoGame","name":"Vroom Boom","url":"https://chivearcade.com/","description":"Arcade car combat game with online 1v1, battle royale against bot cars, wave survival and 2-player split-screen.","genre":["Car combat","Action","Arcade"],"gamePlatform":"PC","playMode":["SinglePlayer","MultiPlayer"],"numberOfPlayers":{"@type":"QuantitativeValue","minValue":1,"maxValue":2},"author":{"@type":"Organization","name":"Chive Arcade","url":"https://chivearcade.com/"},"sameAs":["https://store.steampowered.com/app/5446380"],"image":"https://chivearcade.com/vroom-boom/key-art.jpg"}
@@ -172,20 +173,23 @@
   <header class="site-head">
     <a class="brand" href="/"><img src="/mark-80.png" width="65" height="40" alt=""><span>CHIVE <em>ARCADE</em></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
-    <nav class="site-nav" id="site-nav" aria-label="Main"><ul><li><a href="/#vroom-boom" aria-current="page">Vroom Boom</a></li><li><a href="/#games">Games</a></li><li><a href="https://hub.chivearcade.com/">Hub</a></li><li><a href="/teachers/">Teachers</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a class="nav-steam" href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">Wishlist on Steam</a></li></ul></nav>
+    <nav class="site-nav" id="site-nav" aria-label="Main"><ul><li><a href="/#vroom-boom" aria-current="page">Vroom Boom</a></li><li><a href="/games/">Free Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a class="nav-steam" href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">Wishlist on Steam</a></li></ul><ul class="site-social" aria-label="Chive Arcade on social media"><li><a href="https://x.com/ChiveArcade" target="_blank" rel="noopener">X</a></li><li><a href="https://www.tiktok.com/@chive.arcade" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.youtube.com/@ChiveArcade" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.instagram.com/chivearcade" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://bsky.app/profile/chivearcade.com" target="_blank" rel="noopener">Bluesky</a></li></ul></nav>
   </header>
 <main id="main">
 
 <!--VB-HERO--><section class="vb-hero" id="vroom-boom" aria-labelledby="vb-title">
   <div class="vb-media"><video class="vb-trailer" src="/vroom-boom/trailer-720p.mp4" poster="/vroom-boom/trailer-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Vroom Boom trailer"></video></div>
   <div class="vb-copy">
-    <p class="vb-kicker">Wishlist now</p>
-    <h1 id="vb-title" class="vb-title">Vroom Boom<span class="vb-sub">Arcade car combat, coming to Steam</span></h1>
+    <p class="vb-kicker">Coming to Steam 2027</p>
+    <h1 id="vb-title" class="vb-title">Vroom Boom<span class="vb-sub">Arcade car combat</span></h1>
     <p class="vb-pitch">Pick a car, load it with rockets, mines and missiles, and drive. Vroom Boom is the first Chive Arcade game, and it's coming to Steam. Lots of cars to unlock, each with its own special. Play online 1v1. Fight a pack of bot cars in a battle royale. Hold out in wave survival. Or sit next to a friend for 2-player split-screen. The Steam page lists release for 2027.</p>
     <div class="vb-ctas"><a class="vb-btn" href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a><a class="vb-more" href="https://hub.chivearcade.com/games/vroom-boom/">See the Vroom Boom page &rarr;</a></div>
   </div>
-  <div class="vb-strip"><figure class="vb-clip"><video src="/vroom-boom/late_wave_specials.mp4" poster="/vroom-boom/late_wave_specials.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Late waves and specials"></video><figcaption>Late waves and specials</figcaption></figure><figure class="vb-clip"><video src="/vroom-boom/royale_brawl.mp4" poster="/vroom-boom/royale_brawl.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Battle royale brawl"></video><figcaption>Battle royale brawl</figcaption></figure><figure class="vb-clip"><video src="/vroom-boom/late_wave_wreck_chain.mp4" poster="/vroom-boom/late_wave_wreck_chain.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Wreck chain in the late waves"></video><figcaption>Wreck chain in the late waves</figcaption></figure></div>
 </section><!--/VB-HERO-->
+<section class="vb-gameplay" id="gameplay" aria-labelledby="gameplay-title">
+  <h2 id="gameplay-title"><span class="c">Gameplay</span></h2>
+  <div class="vb-strip"><figure class="vb-clip"><video src="/vroom-boom/late_wave_specials.mp4" poster="/vroom-boom/late_wave_specials.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Late waves and specials"></video><figcaption>Late waves and specials</figcaption></figure><figure class="vb-clip"><video src="/vroom-boom/royale_brawl.mp4" poster="/vroom-boom/royale_brawl.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Battle royale brawl"></video><figcaption>Battle royale brawl</figcaption></figure><figure class="vb-clip"><video src="/vroom-boom/late_wave_wreck_chain.mp4" poster="/vroom-boom/late_wave_wreck_chain.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Wreck chain in the late waves"></video><figcaption>Wreck chain in the late waves</figcaption></figure></div>
+</section>
 <!--VB-INFO--><section class="vb-info">
   <h2>What you do in <span class="c">Vroom Boom</span></h2>
   <ul class="vb-list">
@@ -211,39 +215,18 @@
 </section><!--/VB-INFO-->
 
 
-  <div class="hero">
-    <img class="logo" src="logo.png" alt="Chive Arcade" width="300" height="300" loading="lazy">
-    <h2 class="lead">Tiny games, free, right in your browser.</h2>
-    <p class="h1"><span class="c1">TINY GAMES.</span><br><span class="c2">BIG SCORES.</span></p>
-    <p class="tagline">Tiny browser games for quick score chasing. <strong>A new game drops every Friday.</strong> Play instantly, beat your best.</p>
-    <div class="ctas">
-      <a class="btn btn-primary hub-cta" href="https://hub.chivearcade.com/">See all 27 games on the hub →</a>
-      <a class="btn btn-ghost" href="#alerts">GET FRIDAY ALERTS</a>
-    </div>
-  </div>
+  <section class="mini" id="games">
+    <h2>More from <span class="c">Chive Arcade</span></h2>
+    <p class="sub"><a href="/games/">Free browser games</a></p>
+  </section>
 
-  <div class="stats">
-    <div class="stat"><b>27</b><small>games and counting</small></div>
-    <div class="stat"><b>Weekly</b><small>new drop every Friday</small></div>
-    <div class="stat"><b>Free</b><small>play in your browser</small></div>
-  </div>
-
-  <section id="games">
-    <h2>THIS WEEK'S <span class="c">LINEUP</span></h2>
-    <p class="sub">A few player favorites. Pick any game and play it right now.</p>
-    <div class="games">
-      <a class="game" href="https://chive-arcade.itch.io/ward-chive"><span class="dot"></span><b>WARD</b><small>defend the line</small></a>
-      <a class="game" href="https://chive-arcade.itch.io/flip"><span class="dot"></span><b>FLIP</b><small>one-tap chaos</small></a>
-      <a class="game" href="https://chive-arcade.itch.io/keep-up"><span class="dot"></span><b>KEEP UP</b><small>don't drop it</small></a>
-      <a class="game" href="https://chive-arcade.itch.io/rift-cut"><span class="dot"></span><b>RIFT CUT</b><small>slice the rift</small></a>
-      <a class="game" href="https://chive-arcade.itch.io/timing-ring"><span class="dot"></span><b>TIMING RING</b><small>perfect timing</small></a>
-      <a class="game" href="https://chive-arcade.itch.io/evergreen-empire"><span class="dot"></span><b>EVERGREEN EMPIRE</b><small>grow it all</small></a>
-    </div>
-    <p class="more"><a href="https://hub.chivearcade.com/">See all 27 games on the hub →</a></p>
+  <section class="mini" id="devlog">
+    <h2><span class="c">Devlog</span></h2>
+    <p class="sub">Follow Vroom Boom's development on the <a href="https://www.youtube.com/@ChiveArcade" target="_blank" rel="noopener">Chive Arcade YouTube channel</a>.</p>
   </section>
 
   <section id="alerts">
-    <div class="signup">
+    <div class="signup signup-sm">
       <h2>NEVER MISS A <span class="c">FRIDAY DROP</span></h2>
       <p>One short email when a new game lands. No spam, no selling your address, unsubscribe anytime.</p>
       <form id="signup-form">
@@ -256,9 +239,9 @@
 
 </main>
   <footer class="site-foot">
-    <nav aria-label="Footer"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/#games">Games</a></li><li><a href="https://hub.chivearcade.com/">Hub</a></li><li><a href="/teachers/">Teachers</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
+    <nav aria-label="Footer"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/games/">Free Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a href="/teachers/">Teachers</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
     <p><a href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">Vroom Boom is coming to Steam: wishlist now</a></p>
-    <p><a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://twitter.com/ChiveArcade">X</a> · <a href="https://instagram.com/chivearcade">Instagram</a> · <a href="https://github.com/chive55">GitHub</a></p>
+    <p><a href="https://x.com/ChiveArcade">X</a> · <a href="https://www.tiktok.com/@chive.arcade">TikTok</a> · <a href="https://www.youtube.com/@ChiveArcade">YouTube</a> · <a href="https://www.instagram.com/chivearcade">Instagram</a> · <a href="https://bsky.app/profile/chivearcade.com">Bluesky</a> · <a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://github.com/chive55">GitHub</a></p>
     <p>© <span id="foot-year">2026</span> Chive Arcade</p>
   </footer>
 
@@ -295,6 +278,7 @@ form.addEventListener('submit', async (e) => {
   }
 });
 </script>
+<a class="sticky-wish" href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a>
 <script src="/assets/site-nav.js" defer></script>
 </body>
 </html>

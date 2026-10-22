@@ -27,3 +27,17 @@ a:focus-visible,button:focus-visible{outline:3px solid #FFD85A;outline-offset:2p
 .site-foot a{color:#EAF2FF;text-decoration:none}
 .site-foot a:hover{color:#FFD85A}
 .site-foot p{margin:6px 0}
+/* Social links in header */
+.site-nav{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.site-nav ul.site-social{gap:2px}
+.site-social a{font-size:12px;font-weight:500;color:#9AA7C7;padding:2px 8px}
+/* Sticky wishlist */
+.sticky-wish{position:fixed;right:18px;bottom:18px;z-index:20;background:#c8ed38;color:#0a1013;font:800 16px/1 "Barlow Condensed","Orbitron",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px;text-decoration:none;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+.sticky-wish:hover{background:#d8f86a}
+@media(max-width:760px){
+  .site-nav{align-items:stretch}
+  .site-nav ul.site-social{flex-direction:row;flex-wrap:wrap;justify-content:center;border-top:1px solid rgba(83,230,255,.15);margin-top:6px;padding-top:6px}
+  .site-social a{font-size:14px;padding:8px 10px}
+  .sticky-wish{left:12px;right:12px;bottom:12px;text-align:center}
+  body{padding-bottom:72px}
+}
