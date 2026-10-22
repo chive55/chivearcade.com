@@ -23,6 +23,11 @@ export async function onRequest(ctx) {
     res = r.status === 200 ? r : await ctx.next();
   } else {
     res = await ctx.next();
+    // GitHub Pages used 301 for /teachers -> /teachers/; match it.
+    if (res.status === 308) {
+      const loc = res.headers.get("Location");
+      if (loc) return Response.redirect(new URL(loc, url).toString(), 301);
+    }
   }
 
   if (url.hostname !== PROD) {
