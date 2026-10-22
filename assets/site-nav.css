@@ -2,10 +2,10 @@
 .site-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;position:relative;z-index:5}
 .site-head .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#EAF2FF}
 .site-head .brand img{height:40px;width:auto}
-.site-head .brand span{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:2px;font-size:15px}
+.site-head .brand span{font-family:'Russo One',sans-serif;font-weight:400;letter-spacing:1.5px;font-size:15px;white-space:nowrap}
 .site-head .brand em{font-style:normal;color:#53E6FF}
-.site-nav ul{list-style:none;display:flex;gap:4px;margin:0;padding:0;align-items:center}
-.site-nav a{display:block;color:#EAF2FF;text-decoration:none;font-weight:600;font-size:14px;padding:10px 12px;border-radius:999px}
+.site-nav ul{list-style:none;display:flex;gap:4px;margin:0;padding:0;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.site-nav a{display:block;color:#EAF2FF;text-decoration:none;font-weight:600;font-size:14px;padding:10px 12px;border-radius:999px;white-space:nowrap}
 .site-nav a:hover,.site-nav a:focus-visible{color:#FFD85A;background:rgba(83,230,255,.08)}
 .site-nav a[aria-current="page"]{color:#53E6FF}
 .site-nav a.nav-steam{background:#c8ed38;color:#0a1013;font-weight:800}
@@ -32,7 +32,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #FFD85A;outline-offset:2p
 .site-nav ul.site-social{gap:2px}
 .site-social a{font-size:12px;font-weight:500;color:#9AA7C7;padding:2px 8px}
 /* Sticky wishlist */
-.sticky-wish{position:fixed;right:18px;bottom:18px;z-index:20;background:#c8ed38;color:#0a1013;font:800 16px/1 "Barlow Condensed","Orbitron",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px;text-decoration:none;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+.sticky-wish{position:fixed;right:18px;bottom:18px;z-index:20;background:#c8ed38;color:#0a1013;font:400 16px/1 "Russo One",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px;text-decoration:none;box-shadow:0 6px 24px rgba(0,0,0,.45)}
 .sticky-wish:hover{background:#d8f86a}
 @media(max-width:760px){
   .site-nav{align-items:stretch}
