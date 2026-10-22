@@ -110,27 +110,12 @@
   .more{text-align:center; margin-top:22px}
   .more a{color:var(--cyan); text-decoration:none; font-weight:600; font-size:15px}
 
-  .signup{
-    background:linear-gradient(135deg, var(--panel), #0B1230);
-    border:1px solid rgba(255,216,90,.25); border-radius:22px;
-    padding:clamp(28px,5vw,48px); text-align:center;
-  }
-  .signup h2{margin-bottom:6px}
-  .signup p{color:var(--muted); margin-bottom:24px; font-size:15px}
-  form{display:flex; gap:10px; max-width:480px; margin:0 auto; flex-wrap:wrap; justify-content:center}
-  input[type=email]{
-    flex:1 1 240px; padding:15px 20px; border-radius:999px; border:2px solid rgba(83,230,255,.3);
-    background:#0A0F22; color:var(--text); font-size:15px; outline:none;
-  }
-  input[type=email]:focus{border-color:var(--cyan)}
   button{
     font-family:'Russo One',sans-serif; font-weight:400; letter-spacing:1px; font-size:13px;
     background:var(--pink); color:#fff; border:none; border-radius:999px;
     padding:15px 28px; cursor:pointer; box-shadow:0 6px 24px rgba(255,77,104,.35);
   }
   button:hover{filter:brightness(1.1)}
-  .form-note{font-size:13px; color:var(--muted); margin-top:14px; min-height:20px}
-  .form-note.ok{color:var(--cyan)}
 
   .socials{display:flex; justify-content:center; gap:12px; flex-wrap:wrap; padding:10px 0 30px}
   .socials a{
@@ -160,7 +145,7 @@
 .vb-clip figcaption{font-size:12px;color:#9cafb6;padding:4px 2px}
 @media(max-width:820px){.vb-hero{padding:0;grid-template-columns:1fr}.vb-strip{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:520px){.vb-strip{grid-template-columns:1fr}.vb-clip:nth-child(n+2){display:none}.vb-btn{width:100%;text-align:center}}
-.vb-gameplay{padding:8px 0 28px}.vb-gameplay .vb-strip{padding:0}.mini{padding:28px 0}.mini a{color:var(--cyan)}.signup-sm{padding:24px}.signup-sm h2{font-size:20px}
+.vb-gameplay{padding:8px 0 28px}.vb-gameplay .vb-strip{padding:0}.mini{padding:28px 0}.mini a{color:var(--cyan)}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"VideoGame","name":"Vroom Boom","url":"https://chivearcade.com/","description":"Arcade car combat game with online 1v1, battle royale against bot cars, wave survival and 2-player split-screen.","genre":["Car combat","Action","Arcade"],"gamePlatform":"PC","playMode":["SinglePlayer","MultiPlayer"],"numberOfPlayers":{"@type":"QuantitativeValue","minValue":1,"maxValue":2},"author":{"@type":"Organization","name":"Chive Arcade","url":"https://chivearcade.com/"},"sameAs":["https://store.steampowered.com/app/5446380"],"image":"https://chivearcade.com/vroom-boom/key-art.jpg"}
@@ -225,18 +210,6 @@
     <p class="sub">Follow Vroom Boom's development on the <a href="https://www.youtube.com/@ChiveArcade" target="_blank" rel="noopener">Chive Arcade YouTube channel</a>.</p>
   </section>
 
-  <section id="alerts">
-    <div class="signup signup-sm">
-      <h2>NEVER MISS A <span class="c">FRIDAY DROP</span></h2>
-      <p>One short email when a new game lands. No spam, no selling your address, unsubscribe anytime.</p>
-      <form id="signup-form">
-        <input type="email" id="email" name="email" placeholder="you@example.com" required aria-label="Email address">
-        <button type="submit">NOTIFY ME</button>
-      </form>
-      <p class="form-note" id="form-note"></p>
-    </div>
-  </section>
-
 </main>
   <footer class="site-foot">
     <nav aria-label="Footer"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/games/">Free Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a href="/teachers/">Teachers</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
@@ -246,38 +219,6 @@
   </footer>
 
 </div>
-<script>
-/* ============================================================
-   EMAIL SIGNUP — wired to the "Never miss a Friday drop"
-   Google Form on chivearcade@gmail.com. The form uses Google's
-   own email collection, so we submit via the emailAddress field.
-   Responses land in the form's linked sheet.
-   ============================================================ */
-const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdmwXJ8wwJ_ZBNA7S05PD2wGMTrnQuoLUDjDU2f65m7AGUEcg/formResponse";
-
-
-const form = document.getElementById('signup-form');
-const note = document.getElementById('form-note');
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value.trim();
-  if (!email) return;
-
-  try {
-    const body = new URLSearchParams();
-    body.append('emailAddress', email);
-    // Google Forms doesn't send CORS headers; no-cors still delivers it.
-    await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body });
-    note.textContent = "You're in! Watch your inbox on Fridays.";
-    note.classList.add('ok');
-    form.reset();
-  } catch (err) {
-    note.textContent = "Hmm, that didn't go through. Try again in a bit.";
-    note.classList.remove('ok');
-  }
-});
-</script>
 <a class="sticky-wish" href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a>
 <script src="/assets/site-nav.js" defer></script>
 </body>
