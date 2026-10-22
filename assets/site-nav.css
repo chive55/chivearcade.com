@@ -1,0 +1,43 @@
+/* Shared Chive Arcade header nav + footer */
+.site-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;position:relative;z-index:5}
+.site-head .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#EAF2FF}
+.site-head .brand img{height:40px;width:auto}
+.site-head .brand span{font-family:'Russo One',sans-serif;font-weight:400;letter-spacing:1.5px;font-size:15px;white-space:nowrap}
+.site-head .brand em{font-style:normal;color:#53E6FF}
+.site-nav ul{list-style:none;display:flex;gap:4px;margin:0;padding:0;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.site-nav a{display:block;color:#EAF2FF;text-decoration:none;font-weight:600;font-size:14px;padding:10px 12px;border-radius:999px;white-space:nowrap}
+.site-nav a:hover,.site-nav a:focus-visible{color:#FFD85A;background:rgba(83,230,255,.08)}
+.site-nav a[aria-current="page"]{color:#53E6FF}
+.site-nav a.nav-steam{background:#c8ed38;color:#0a1013;font-weight:800}
+.site-nav a.nav-steam:hover{background:#d8f86a;color:#0a1013}
+.nav-toggle{display:none;background:transparent;border:2px solid rgba(83,230,255,.4);color:#EAF2FF;border-radius:10px;padding:8px 12px;font:700 14px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:none;letter-spacing:0}
+a:focus-visible,button:focus-visible{outline:3px solid #FFD85A;outline-offset:2px}
+.skip{position:absolute;left:-999px;top:8px;background:#FFD85A;color:#080B18;padding:8px 14px;border-radius:8px;z-index:10}
+.skip:focus{left:8px}
+@media(max-width:760px){
+  .nav-toggle{display:block}
+  .js .site-nav{display:none;position:absolute;top:100%;left:0;right:0;background:#111A38;border:1px solid rgba(83,230,255,.25);border-radius:16px;padding:8px}
+  .js .site-nav.open{display:block}
+  .site-nav ul{flex-direction:column;align-items:stretch}
+  .no-js-nav .site-nav ul{flex-direction:row;flex-wrap:wrap}
+  .site-nav a{padding:14px 16px;font-size:16px}
+}
+.site-foot{border-top:1px solid rgba(83,230,255,.12);margin-top:30px;padding:28px 0 40px;color:#9AA7C7;font-size:14px;text-align:center}
+.site-foot nav ul{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:0 0 14px;padding:0}
+.site-foot a{color:#EAF2FF;text-decoration:none}
+.site-foot a:hover{color:#FFD85A}
+.site-foot p{margin:6px 0}
+/* Social links in header */
+.site-nav{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.site-nav ul.site-social{gap:2px}
+.site-social a{font-size:12px;font-weight:500;color:#9AA7C7;padding:2px 8px}
+/* Sticky wishlist */
+.sticky-wish{position:fixed;right:18px;bottom:18px;z-index:20;background:#c8ed38;color:#0a1013;font:400 16px/1 "Russo One",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px;text-decoration:none;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+.sticky-wish:hover{background:#d8f86a}
+@media(max-width:760px){
+  .site-nav{align-items:stretch}
+  .site-nav ul.site-social{flex-direction:row;flex-wrap:wrap;justify-content:center;border-top:1px solid rgba(83,230,255,.15);margin-top:6px;padding-top:6px}
+  .site-social a{font-size:14px;padding:8px 10px}
+  .sticky-wish{left:12px;right:12px;bottom:12px;text-align:center}
+  body{padding-bottom:72px}
+}
