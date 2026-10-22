@@ -7,6 +7,8 @@
 <meta name="description" content="Privacy policy for the Chive Arcade Uploader, the internal tool used to publish videos to Chive Arcade's YouTube channels.">
 <meta name="theme-color" content="#080B18">
 <link rel="icon" type="image/png" href="mark.png">
+<link rel="canonical" href="https://chivearcade.com/privacy.html">
+<link rel="stylesheet" href="/assets/site-nav.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -53,12 +55,13 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <a class="brand" href="index.html">
-      <img src="mark.png" alt="Chive Arcade mark">
-      <span>CHIVE<em>ARCADE</em></span>
-    </a>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head">
+    <a class="brand" href="/"><img src="/mark-80.png" width="65" height="40" alt=""><span>CHIVE <em>ARCADE</em></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav" aria-label="Main"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/#games">Games</a></li><li><a href="https://hub.chivearcade.com/">Hub</a></li><li><a href="/teachers/">Teachers</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a class="nav-steam" href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">Wishlist on Steam</a></li></ul></nav>
   </header>
+<main id="main">
 
   <h1>PRIVACY <span class="c1">POLICY</span></h1>
   <p class="updated">Effective October 9, 2026. Applies to the Chive Arcade Uploader.</p>
@@ -93,7 +96,14 @@
   <h2>CONTACT</h2>
   <p>Questions about this policy: <a href="mailto:chivearcade@gmail.com">chivearcade@gmail.com</a>.</p>
 
-  <a class="back" href="index.html">&larr; Back to Chive Arcade</a>
+</main>
+  <footer class="site-foot">
+    <nav aria-label="Footer"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/#games">Games</a></li><li><a href="https://hub.chivearcade.com/">Hub</a></li><li><a href="/teachers/">Teachers</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
+    <p><a href="https://store.steampowered.com/app/5446380/Vroom_Boom/" target="_blank" rel="noopener">Vroom Boom is coming to Steam: wishlist now</a></p>
+    <p><a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://twitter.com/ChiveArcade">X</a> · <a href="https://instagram.com/chivearcade">Instagram</a> · <a href="https://github.com/chive55">GitHub</a></p>
+    <p>© <span id="foot-year">2026</span> Chive Arcade</p>
+  </footer>
 </div>
+<script src="/assets/site-nav.js" defer></script>
 </body>
 </html>
