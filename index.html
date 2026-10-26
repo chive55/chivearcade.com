@@ -21,9 +21,10 @@
 <meta name="twitter:title" content="Vroom Boom: Car Combat, Coming to Steam | Chive Arcade">
 <meta name="twitter:description" content="Arcade car combat with online 1v1, Free For All, King of the Hill and Capture the Flag, rockets, mines, bot car battle royale, co-op and lots of cars to earn. Coming to Steam in 2027. Wishlist it now.">
 <meta name="twitter:image" content="https://chivearcade.com/vroom-boom/key-art.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/vroom-boom/trailer-poster.jpg" as="image" fetchpriority="high">
+<link rel="preload" href="/assets/fonts/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
   :root{
     --bg:#080B18; --panel:#111A38; --cyan:#53E6FF; --yellow:#FFD85A; --pink:#FF4D68;
@@ -165,7 +166,7 @@
 <main id="main">
 
 <!--VB-HERO--><section class="vb-hero" id="vroom-boom" aria-labelledby="vb-title">
-  <div class="vb-media"><video class="vb-trailer" src="/vroom-boom/trailer-720p.mp4" poster="/vroom-boom/trailer-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Vroom Boom trailer"></video></div>
+  <div class="vb-media"><video class="vb-trailer" data-src="/vroom-boom/trailer-mobile.mp4" data-src-hd="/vroom-boom/trailer-hd.mp4" poster="/vroom-boom/trailer-poster.jpg" autoplay muted loop playsinline preload="none" aria-label="Vroom Boom trailer"></video></div>
   <div class="vb-copy">
     <p class="vb-kicker">Coming to Steam 2027</p>
     <h1 id="vb-title" class="vb-title"><img class="vb-logo" src="/vroom-boom/logo-b.png" srcset="/vroom-boom/logo-b.png 1x, /vroom-boom/logo-b@2x.png 2x" width="520" height="75" alt="Vroom Boom logo" fetchpriority="high"><span class="vb-sub">Arcade car combat</span></h1>
@@ -175,7 +176,7 @@
 </section><!--/VB-HERO-->
 <section class="vb-gameplay" id="gameplay" aria-labelledby="gameplay-title">
   <h2 id="gameplay-title"><span class="c">Gameplay</span></h2>
-  <div class="vb-strip"><figure class="vb-clip"><video src="/vroom-boom/late_wave_specials.mp4" poster="/vroom-boom/late_wave_specials.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Late waves and specials"></video><figcaption>Late waves and specials</figcaption></figure><figure class="vb-clip"><video src="/vroom-boom/royale_brawl.mp4" poster="/vroom-boom/royale_brawl.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Battle royale brawl"></video><figcaption>Battle royale brawl</figcaption></figure><figure class="vb-clip"><video src="/vroom-boom/late_wave_wreck_chain.mp4" poster="/vroom-boom/late_wave_wreck_chain.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Wreck chain in the late waves"></video><figcaption>Wreck chain in the late waves</figcaption></figure></div>
+  <div class="vb-strip"><figure class="vb-clip"><video data-lazy data-src="/vroom-boom/late_wave_specials.mp4" poster="/vroom-boom/late_wave_specials.jpg" autoplay muted loop playsinline preload="none" aria-label="Late waves and specials"></video><figcaption>Late waves and specials</figcaption></figure><figure class="vb-clip"><video data-lazy data-src="/vroom-boom/royale_brawl.mp4" poster="/vroom-boom/royale_brawl.jpg" autoplay muted loop playsinline preload="none" aria-label="Battle royale brawl"></video><figcaption>Battle royale brawl</figcaption></figure><figure class="vb-clip"><video data-lazy data-src="/vroom-boom/late_wave_wreck_chain.mp4" poster="/vroom-boom/late_wave_wreck_chain.jpg" autoplay muted loop playsinline preload="none" aria-label="Wreck chain in the late waves"></video><figcaption>Wreck chain in the late waves</figcaption></figure></div>
 </section>
 <!--VB-INFO--><section class="vb-info">
   <h2>What you do in <span class="c">Vroom Boom</span></h2>
@@ -222,6 +223,24 @@
 
 </div>
 <a class="sticky-wish" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a>
+<script>
+(function(){
+  var hero=document.querySelector('video.vb-trailer');
+  function startHero(){
+    if(!hero||hero.src)return;
+    var wide=window.matchMedia('(min-width: 900px)').matches;
+    hero.src=wide?hero.getAttribute('data-src-hd'):hero.getAttribute('data-src');
+    var p=hero.play();if(p&&p.catch)p.catch(function(){});
+  }
+  if(document.readyState==='complete')startHero();else window.addEventListener('load',startHero);
+  var clips=document.querySelectorAll('video[data-lazy]');
+  function load(v){if(v.src)return;v.src=v.getAttribute('data-src');var p=v.play();if(p&&p.catch)p.catch(function(){});}
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){load(e.target);io.unobserve(e.target);}});},{rootMargin:'200px'});
+    clips.forEach(function(v){io.observe(v);});
+  }else{clips.forEach(load);}
+})();
+</script>
 <script src="/assets/site-nav.js" defer></script>
 </body>
 </html>
