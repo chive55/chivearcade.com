@@ -32,6 +32,9 @@ function json(status, body) {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
     },
   });
 }
@@ -56,25 +59,80 @@ function resolveTurnstileSecret(env) {
   return key || null;
 }
 
-async function parseBody(request) {
-  const ct = (request.headers.get("Content-Type") || "").toLowerCase();
-  if (ct.includes("application/json")) {
-    const data = await request.json().catch(() => null);
-    return data && typeof data === "object" ? data : {};
+const MAX_BODY_BYTES = 8_192;
+const MEM_HITS_MAX = 2_000;
+const UPSTREAM_TIMEOUT_MS = 8_000;
+
+class BodyTooLargeError extends Error {
+  constructor() {
+    super("too_large");
+    this.code = "too_large";
   }
+}
+
+/** Read the request body with a hard byte cap (works for chunked bodies too). */
+async function readBodyLimited(request, maxBytes) {
+  if (!request.body) return new Uint8Array(0);
+  const reader = request.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      try {
+        await reader.cancel();
+      } catch {
+        /* ignore */
+      }
+      throw new BodyTooLargeError();
+    }
+    chunks.push(value);
+  }
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return out;
+}
+
+async function parseBody(request) {
+  const bytes = await readBodyLimited(request, MAX_BODY_BYTES);
+  const ct = (request.headers.get("Content-Type") || "").toLowerCase();
+  const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+
   if (
     ct.includes("application/x-www-form-urlencoded") ||
     ct.includes("multipart/form-data")
   ) {
-    const fd = await request.formData();
+    const rebuilt = new Request("https://internal.invalid/parse", {
+      method: "POST",
+      headers: {
+        "Content-Type": request.headers.get("Content-Type") || "application/octet-stream",
+      },
+      body: buf.byteLength ? buf : undefined,
+    });
+    const fd = await rebuilt.formData();
     const out = {};
     for (const [k, v] of fd.entries()) {
       if (typeof v === "string") out[k] = v;
     }
     return out;
   }
-  const text = await request.text();
+
+  const text = new TextDecoder().decode(bytes);
   if (!text) return {};
+  if (ct.includes("application/json") || text.trimStart().startsWith("{") || text.trimStart().startsWith("[")) {
+    try {
+      const data = JSON.parse(text);
+      return data && typeof data === "object" ? data : {};
+    } catch {
+      return {};
+    }
+  }
   try {
     const data = JSON.parse(text);
     return data && typeof data === "object" ? data : {};
@@ -84,6 +142,35 @@ async function parseBody(request) {
     for (const [k, v] of params.entries()) out[k] = v;
     return out;
   }
+}
+
+function originAllowed(request) {
+  const site = (request.headers.get("Sec-Fetch-Site") || "").toLowerCase();
+  if (site === "same-origin") return true;
+  const origin = request.headers.get("Origin");
+  if (!origin) return false;
+  try {
+    const o = new URL(origin);
+    const host = new URL(request.url).hostname;
+    if (o.hostname === host) return true;
+    if (o.hostname === "chivearcade.com" || o.hostname === "www.chivearcade.com") {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+function upstreamSignal() {
+  try {
+    if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+      return AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
+    }
+  } catch {
+    /* ignore */
+  }
+  return undefined;
 }
 
 async function rateLimited(ip) {
@@ -115,12 +202,30 @@ async function rateLimited(ip) {
     let stamps = memHits.get(ip) || [];
     stamps = stamps.filter((t) => now - t < RATE_WINDOW_MS);
     if (stamps.length >= RATE_MAX) {
+      pruneMemHits(now);
       memHits.set(ip, stamps);
       return true;
     }
     stamps.push(now);
+    pruneMemHits(now);
     memHits.set(ip, stamps);
     return false;
+  }
+}
+
+function pruneMemHits(now) {
+  for (const [k, v] of memHits) {
+    const alive = (v || []).filter((t) => now - t < RATE_WINDOW_MS);
+    if (alive.length === 0) memHits.delete(k);
+    else memHits.set(k, alive);
+  }
+  if (memHits.size <= MEM_HITS_MAX) return;
+  const excess = memHits.size - MEM_HITS_MAX;
+  let i = 0;
+  for (const k of memHits.keys()) {
+    if (i >= excess) break;
+    memHits.delete(k);
+    i += 1;
   }
 }
 
@@ -135,6 +240,7 @@ async function verifyTurnstile(token, secret, ip) {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,
+      signal: upstreamSignal(),
     }
   );
   const data = await res.json().catch(() => ({ success: false }));
@@ -185,6 +291,7 @@ async function checkKitSendingReady(apiKey) {
       Accept: "application/json",
       "X-Kit-Api-Key": apiKey,
     },
+    signal: upstreamSignal(),
   });
   const httpStatus = res.status;
   let data = null;
@@ -242,6 +349,7 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
       email_address: email,
       state: "inactive",
     }),
+    signal: upstreamSignal(),
   });
 
   const create = await readKitSafe(createRes);
@@ -265,6 +373,7 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
       method: "POST",
       headers,
       body: JSON.stringify(formBody),
+      signal: upstreamSignal(),
     }
   );
 
@@ -293,20 +402,20 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
   };
 }
 
-const MAX_BODY_BYTES = 8_192;
-
-function contentLengthTooLarge(request) {
-  const raw = request.headers.get("Content-Length");
-  if (raw == null || raw === "") return false;
-  const n = Number(raw);
-  return Number.isFinite(n) && n > MAX_BODY_BYTES;
-}
-
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  if (contentLengthTooLarge(request)) {
-    return json(413, { ok: false, error: "bad_request" });
+  // Fast-reject when Content-Length is present and oversized.
+  const rawLen = request.headers.get("Content-Length");
+  if (rawLen != null && rawLen !== "") {
+    const n = Number(rawLen);
+    if (Number.isFinite(n) && n > MAX_BODY_BYTES) {
+      return json(413, { ok: false, error: "bad_request" });
+    }
+  }
+
+  if (!originAllowed(request)) {
+    return json(403, { ok: false, error: "bad_request" });
   }
 
   const ip = clientIp(request);
@@ -317,7 +426,10 @@ export async function onRequestPost(context) {
   let body;
   try {
     body = await parseBody(request);
-  } catch {
+  } catch (err) {
+    if (err && err.code === "too_large") {
+      return json(413, { ok: false, error: "bad_request" });
+    }
     return json(400, { ok: false, error: "bad_request" });
   }
 
@@ -412,6 +524,9 @@ export async function onRequest(context) {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Max-Age": "86400",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
       },
     });
   }

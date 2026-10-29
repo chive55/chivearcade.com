@@ -25,10 +25,19 @@
     return mobile;
   }
 
-  function setBtn(btn, playing) {
+  function videoName(video) {
+    return (video && video.getAttribute("aria-label")) || "video";
+  }
+
+  function setBtn(btn, playing, video) {
     if (!btn) return;
-    btn.setAttribute("aria-pressed", playing ? "true" : "false");
+    btn.removeAttribute("aria-pressed");
     btn.textContent = playing ? "Pause video" : "Play video";
+    var name = videoName(video);
+    btn.setAttribute(
+      "aria-label",
+      playing ? "Pause " + name : "Play " + name
+    );
   }
 
   function ensureBtn(video) {
@@ -40,8 +49,8 @@
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "vb-video-toggle";
-    btn.setAttribute("aria-pressed", "false");
     btn.textContent = "Play video";
+    btn.setAttribute("aria-label", "Play " + videoName(video));
     host.appendChild(btn);
     return btn;
   }
@@ -62,13 +71,17 @@
     function play() {
       loadSrc();
       var p = video.play();
-      if (p && p.catch) p.catch(function () {});
-      setBtn(btn, true);
+      setBtn(btn, true, video);
+      if (p && p.catch) {
+        p.catch(function () {
+          setBtn(btn, false, video);
+        });
+      }
     }
 
     function pause() {
       video.pause();
-      setBtn(btn, false);
+      setBtn(btn, false, video);
     }
 
     if (btn) {
@@ -79,16 +92,16 @@
     }
 
     video.addEventListener("play", function () {
-      setBtn(btn, true);
+      setBtn(btn, true, video);
     });
     video.addEventListener("pause", function () {
-      setBtn(btn, false);
+      setBtn(btn, false, video);
     });
 
     video.removeAttribute("autoplay");
 
     if (!wantAuto) {
-      setBtn(btn, false);
+      setBtn(btn, false, video);
       return { play: play, pause: pause, loadSrc: loadSrc, auto: false };
     }
 
