@@ -159,6 +159,24 @@ async function verifyTurnstile(token, secret, ip) {
  * Kit v4: create/upsert subscriber as inactive, then add to form by email.
  * Never logs request/response bodies (may include email) or the API key.
  */
+/** Parse Kit JSON; return only non-secret fields (never email). */
+async function readKitSafe(res) {
+  const httpStatus = res.status;
+  let state = null;
+  try {
+    const data = await res.json();
+    const sub = data && data.subscriber;
+    if (sub && typeof sub.state === "string") state = sub.state;
+  } catch {
+    try {
+      await res.arrayBuffer();
+    } catch {
+      /* ignore */
+    }
+  }
+  return { httpStatus, state };
+}
+
 async function subscribeViaKitV4(email, formId, apiKey, referrer) {
   const headers = {
     "Content-Type": "application/json",
@@ -177,23 +195,14 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
     }),
   });
 
-  if (createRes.status < 200 || createRes.status >= 300) {
-    // Drain body without logging contents
-    try {
-      await createRes.arrayBuffer();
-    } catch {
-      /* ignore */
-    }
+  const create = await readKitSafe(createRes);
+  if (create.httpStatus < 200 || create.httpStatus >= 300) {
     return {
       ok: false,
       step: "create_subscriber",
-      httpStatus: createRes.status,
+      httpStatus: create.httpStatus,
+      subscriberState: create.state,
     };
-  }
-  try {
-    await createRes.arrayBuffer();
-  } catch {
-    /* ignore */
   }
 
   // 2) Add to form by email — triggers the form's double opt-in email.
@@ -209,25 +218,23 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
     }
   );
 
-  if (formRes.status < 200 || formRes.status >= 300) {
-    try {
-      await formRes.arrayBuffer();
-    } catch {
-      /* ignore */
-    }
+  const form = await readKitSafe(formRes);
+  if (form.httpStatus < 200 || form.httpStatus >= 300) {
     return {
       ok: false,
       step: "add_to_form",
-      httpStatus: formRes.status,
+      httpStatus: form.httpStatus,
+      subscriberState: form.state || create.state,
+      createHttp: create.httpStatus,
     };
   }
-  try {
-    await formRes.arrayBuffer();
-  } catch {
-    /* ignore */
-  }
 
-  return { ok: true, httpStatus: formRes.status };
+  return {
+    ok: true,
+    httpStatus: form.httpStatus,
+    createHttp: create.httpStatus,
+    subscriberState: form.state || create.state,
+  };
 }
 
 export async function onRequestPost(context) {
@@ -306,9 +313,15 @@ export async function onRequestPost(context) {
         error: "provider_error",
         kit_step: result.step || "unknown",
         kit_http: result.httpStatus || null,
+        subscriber_state: result.subscriberState || null,
       });
     }
-    return json(200, { ok: true });
+    return json(200, {
+      ok: true,
+      kit_http: result.httpStatus || null,
+      kit_create_http: result.createHttp || null,
+      subscriber_state: result.subscriberState || null,
+    });
   } catch {
     return json(502, {
       ok: false,
