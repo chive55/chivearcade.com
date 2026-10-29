@@ -90,7 +90,7 @@
             return;
           }
           var err = data.error || "";
-          if (err === "not_configured") {
+          if (err === "not_configured" || err === "turnstile_not_configured" || err === "sending_not_ready") {
             setMsg(msg, "err", "Signup is not live yet. Try again soon.");
           } else if (err === "invalid_email") {
             setMsg(msg, "err", "That email does not look right.");
@@ -100,12 +100,7 @@
             setMsg(msg, "err", "Please complete the check and try again.");
             resetTurnstile(form);
           } else if (err === "provider_error") {
-            var ks = data.kit_status || "";
-            if (ks === "quarantined") {
-              setMsg(msg, "err", "Kit blocked this signup as automated. Try again from the form, or email us.");
-            } else {
-              setMsg(msg, "err", "Signup did not go through. Try again.");
-            }
+            setMsg(msg, "err", "Signup did not go through. Try again.");
             resetTurnstile(form);
           } else {
             setMsg(msg, "err", "Something went wrong. Try again.");
