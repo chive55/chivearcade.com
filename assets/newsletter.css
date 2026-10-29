@@ -1,0 +1,86 @@
+/* Newsletter signup (Vroom Boom + footer) */
+.nl-box{
+  margin:18px 0 0;
+  padding:18px 18px 16px;
+  background:rgba(17,26,56,.85);
+  border:1px solid rgba(83,230,255,.22);
+  border-radius:16px;
+  max-width:520px;
+}
+.nl-box h2,.nl-box .nl-heading{
+  font-family:'Russo One',sans-serif;
+  font-weight:400;
+  font-size:clamp(18px,2.4vw,22px);
+  letter-spacing:.04em;
+  margin:0 0 10px;
+  color:var(--text,#EAF2FF);
+}
+.nl-form{display:grid;gap:10px}
+.nl-row{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.nl-row input[type="email"]{
+  flex:1 1 180px;
+  min-width:0;
+  background:#0a1018;
+  border:2px solid rgba(83,230,255,.35);
+  color:var(--text,#EAF2FF);
+  border-radius:999px;
+  padding:12px 16px;
+  font:500 15px/1.2 Inter,system-ui,sans-serif;
+}
+.nl-row input[type="email"]:focus{
+  outline:3px solid #FFD85A;
+  outline-offset:2px;
+  border-color:#53E6FF;
+}
+.nl-row button,.nl-btn{
+  flex:0 0 auto;
+  background:var(--cyan,#53E6FF);
+  color:#06121A;
+  border:0;
+  border-radius:999px;
+  padding:12px 22px;
+  font:700 15px/1 Inter,system-ui,sans-serif;
+  cursor:pointer;
+  box-shadow:0 4px 16px rgba(83,230,255,.28);
+}
+.nl-row button:hover,.nl-btn:hover{filter:brightness(1.06)}
+.nl-row button:disabled{opacity:.6;cursor:wait}
+.nl-consent{margin:0;font-size:12px;color:var(--muted,#9AA7C7);line-height:1.45}
+.nl-consent a{color:var(--cyan,#53E6FF)}
+.nl-msg{margin:0;font-size:14px;min-height:1.4em}
+.nl-msg[data-state="ok"]{color:#7dffb3}
+.nl-msg[data-state="err"]{color:#FF4D68}
+.nl-hp{
+  position:absolute!important;
+  left:-10000px!important;
+  top:auto!important;
+  width:1px!important;
+  height:1px!important;
+  overflow:hidden!important;
+  opacity:0!important;
+}
+.nl-turnstile{min-height:70px}
+/* Compact footer variant */
+.nl-foot{
+  margin:14px auto 10px;
+  max-width:640px;
+  padding:12px 14px;
+  background:rgba(17,26,56,.55);
+  border:1px solid rgba(83,230,255,.14);
+  border-radius:12px;
+  text-align:left;
+}
+.nl-foot .nl-heading{
+  font-size:14px;
+  letter-spacing:.02em;
+  margin:0 0 8px;
+  font-family:Inter,system-ui,sans-serif;
+  font-weight:600;
+}
+.nl-foot .nl-row input[type="email"]{padding:10px 14px;font-size:14px}
+.nl-foot .nl-row button{padding:10px 16px;font-size:14px}
+.nl-foot .nl-consent{font-size:11px}
+.nl-foot .nl-turnstile{transform:scale(.85);transform-origin:left top;min-height:65px}
+@media(max-width:520px){
+  .nl-row button{width:100%}
+}

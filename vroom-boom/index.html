@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vroom Boom | Chive Arcade</title>
+<meta name="description" content="Vroom Boom arcade car combat. Wishlist on Steam, play the itch build, and get occasional news.">
+<meta name="theme-color" content="#080B18">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site-nav.css">
+<link rel="stylesheet" href="/assets/newsletter.css">
+<link rel="canonical" href="https://chivearcade.com/vroom-boom/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chive Arcade">
+<meta property="og:title" content="Vroom Boom | Chive Arcade">
+<meta property="og:description" content="Vroom Boom arcade car combat. Wishlist on Steam, play the itch build, and get occasional news.">
+<meta property="og:url" content="https://chivearcade.com/vroom-boom/">
+<meta property="og:image" content="https://chivearcade.com/vroom-boom/key-art.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vroom Boom | Chive Arcade">
+<meta name="twitter:description" content="Vroom Boom arcade car combat. Wishlist on Steam, play the itch build, and get occasional news.">
+<meta name="twitter:image" content="https://chivearcade.com/vroom-boom/key-art.jpg">
+<link rel="preload" href="/assets/fonts/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+  :root{
+    --bg:#080B18; --panel:#111A38; --cyan:#53E6FF; --yellow:#FFD85A; --pink:#FF4D68;
+    --text:#EAF2FF; --muted:#9AA7C7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    line-height:1.6; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(83,230,255,.16), transparent 60%),
+      radial-gradient(700px 420px at 90% 10%, rgba(255,77,104,.12), transparent 55%);
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding:0 20px; position:relative; z-index:1}
+  .c{color:var(--cyan)}
+  .vb-page{padding:10px 0 40px}
+  .vb-art{
+    display:block; width:100%; max-width:720px; height:auto; margin:0 auto 18px;
+    aspect-ratio:1232/706; object-fit:cover;
+    border-radius:18px; border:1px solid rgba(83,230,255,.18);
+    background:#070b12;
+  }
+  .vb-page h1{
+    font-family:'Russo One',sans-serif; font-weight:400;
+    font-size:clamp(28px,5vw,44px); letter-spacing:.04em; text-align:center; margin:0 0 8px;
+  }
+  .vb-page .lead{
+    text-align:center; color:var(--muted); max-width:640px; margin:0 auto 18px;
+    font-size:clamp(15px,1.8vw,18px);
+  }
+  .vb-ctas{
+    display:flex; flex-wrap:wrap; gap:12px 16px; justify-content:center; align-items:center;
+    margin:0 0 8px;
+  }
+  .vb-btn{
+    display:inline-block; background:#c8ed38; color:#0a1013;
+    font:400 18px/1 "Russo One",sans-serif; letter-spacing:.06em; text-transform:uppercase;
+    padding:14px 24px; border-radius:999px; text-decoration:none; box-shadow:0 6px 0 #789011;
+  }
+  .vb-btn:hover{filter:brightness(1.05)}
+  .vb-btn-ghost{
+    background:transparent; color:var(--cyan); box-shadow:none;
+    border:2px solid var(--cyan); font-size:16px; padding:12px 20px;
+  }
+  .nl-wrap{display:flex; justify-content:center; margin-top:8px}
+  .nl-wrap .nl-box{width:100%}
+  .more{text-align:center; margin-top:28px; color:var(--muted); font-size:14px}
+  .more a{color:var(--cyan)}
+  .nl-box .nl-turnstile{min-height:70px}
+  .nl-box .nl-msg{min-height:1.4em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head">
+    <a class="brand" href="/"><img src="/mark-80.png" width="65" height="40" alt=""><span>CHIVE <em>ARCADE</em></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav" aria-label="Main"><ul><li><a href="/vroom-boom/" aria-current="page">Vroom Boom</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a class="nav-steam" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=vroomboom-page" target="_blank" rel="noopener">Wishlist on Steam</a></li></ul><ul class="site-social" aria-label="Chive Arcade on social media"><li><a href="https://x.com/ChiveArcade" target="_blank" rel="noopener">X</a></li><li><a href="https://www.tiktok.com/@chive.arcade" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.youtube.com/@ChiveArcade" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.instagram.com/chivearcade" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://bsky.app/profile/chivearcade.com" target="_blank" rel="noopener">Bluesky</a></li></ul></nav>
+  </header>
+
+<main id="main" class="vb-page">
+  <img class="vb-art" src="/vroom-boom/key-art.jpg" width="1232" height="706" alt="Vroom Boom key art" decoding="async">
+  <h1>Vroom <span class="c">Boom</span></h1>
+  <p class="lead">Arcade car combat coming to Steam in 2027. Wishlist it, play the itch build, and get the occasional update.</p>
+
+  <div class="vb-ctas">
+    <a class="vb-btn" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=vroomboom-page" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a>
+    <a class="vb-btn vb-btn-ghost" href="https://chive-arcade.itch.io/vroom-boom" target="_blank" rel="noopener">Play on itch.io</a>
+  </div>
+
+  <div class="nl-wrap">
+    <section class="nl-box" id="newsletter" aria-labelledby="nl-heading">
+      <h2 id="nl-heading" class="nl-heading">Get Vroom Boom news</h2>
+      <form class="nl-form" action="/api/subscribe" method="post" novalidate>
+        <label class="nl-hp" aria-hidden="true">Leave blank
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </label>
+        <div class="nl-row">
+          <label class="visually-hidden" for="nl-email-vb" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">Email</label>
+          <input id="nl-email-vb" type="email" name="email" autocomplete="email" required placeholder="you@email.com" aria-describedby="nl-consent-vb">
+          <button type="submit">Sign me up</button>
+        </div>
+        <div class="nl-turnstile" data-turnstile></div>
+        <p id="nl-consent-vb" class="nl-consent">Vroom Boom news now and then. Unsubscribe anytime. <a href="/privacy.html">Privacy</a>.</p>
+        <p class="nl-msg" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+
+  <p class="more"><a href="/#vroom-boom">More about Vroom Boom on the home page</a></p>
+</main>
+
+  <footer class="site-foot">
+    <nav aria-label="Footer"><ul><li><a href="/vroom-boom/">Vroom Boom</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
+    <p><a href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom" target="_blank" rel="noopener">Vroom Boom is coming to Steam: wishlist now</a></p>
+    <p><a href="https://x.com/ChiveArcade">X</a> · <a href="https://www.tiktok.com/@chive.arcade">TikTok</a> · <a href="https://www.youtube.com/@ChiveArcade">YouTube</a> · <a href="https://www.instagram.com/chivearcade">Instagram</a> · <a href="https://bsky.app/profile/chivearcade.com">Bluesky</a> · <a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://github.com/chive55">GitHub</a></p>
+    <p>© <span id="foot-year">2026</span> Chive Arcade</p>
+  </footer>
+</div>
+<script src="/assets/site-nav.js" defer></script>
+<script src="/assets/newsletter.js" defer></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onNewsletterTurnstileLoad" async defer></script>
+<script>document.getElementById('foot-year').textContent=new Date().getFullYear();</script>
+</body>
+</html>

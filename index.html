@@ -10,6 +10,7 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/site-nav.css">
+<link rel="stylesheet" href="/assets/newsletter.css">
 <link rel="canonical" href="https://chivearcade.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Chive Arcade">
@@ -216,6 +217,22 @@
 </main>
   <footer class="site-foot">
     <nav aria-label="Footer"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
+    <div class="nl-foot" aria-labelledby="nl-foot-heading">
+      <p id="nl-foot-heading" class="nl-heading">Vroom Boom news, straight to your inbox</p>
+      <form class="nl-form" action="/api/subscribe" method="post" novalidate>
+        <label class="nl-hp" aria-hidden="true">Leave blank
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </label>
+        <div class="nl-row">
+          <label for="nl-email-home" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">Email</label>
+          <input id="nl-email-home" type="email" name="email" autocomplete="email" required placeholder="you@email.com" aria-describedby="nl-consent-home">
+          <button type="submit">Sign me up</button>
+        </div>
+        <div class="nl-turnstile" data-turnstile></div>
+        <p id="nl-consent-home" class="nl-consent">Vroom Boom news now and then. Unsubscribe anytime. <a href="/privacy.html">Privacy</a>.</p>
+        <p class="nl-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
     <p><a href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom" target="_blank" rel="noopener">Vroom Boom is coming to Steam: wishlist now</a></p>
     <p><a href="https://x.com/ChiveArcade">X</a> · <a href="https://www.tiktok.com/@chive.arcade">TikTok</a> · <a href="https://www.youtube.com/@ChiveArcade">YouTube</a> · <a href="https://www.instagram.com/chivearcade">Instagram</a> · <a href="https://bsky.app/profile/chivearcade.com">Bluesky</a> · <a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://github.com/chive55">GitHub</a></p>
     <p>© <span id="foot-year">2026</span> Chive Arcade</p>
@@ -242,5 +259,7 @@
 })();
 </script>
 <script src="/assets/site-nav.js" defer></script>
+<script src="/assets/newsletter.js" defer></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onNewsletterTurnstileLoad" async defer></script>
 </body>
 </html>
