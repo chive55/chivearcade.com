@@ -1,13 +1,28 @@
 /**
  * POST /api/subscribe
- * Newsletter signup: honeypot, Turnstile, rate limit, then Kit (ConvertKit) v4.
- * No database. Emails are never logged. Without KIT_API_KEY + KIT_FORM_ID,
- * returns 503 {ok:false,error:"not_configured"} and stores nothing.
+ * Newsletter signup: honeypot, Turnstile, rate limit, then Kit public form POST.
+ * No database. Emails are never logged. No Kit API key required.
+ *
+ * Kit public form (double opt-in):
+ *   POST https://app.kit.com/forms/{KIT_FORM_ID}/subscriptions
+ *   Content-Type: application/x-www-form-urlencoded
+ *   Body: email_address=...
+ * Embed: https://chive-arcade.kit.com/fd74872931/index.js (form 10114495)
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 5;
+const DEFAULT_KIT_FORM_ID = "10114495";
+
+/**
+ * Cloudflare Turnstile always-pass TEST secret.
+ * Docs: https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+ * ONLY used as a fallback when TURNSTILE_SECRET_KEY is unset AND the request
+ * host ends with ".pages.dev" (preview). Never on production hosts.
+ */
+const TURNSTILE_TEST_SECRET_ALWAYS_PASS =
+  "1x0000000000000000000000000000000AA";
 
 /** Best-effort in-memory map (per isolate). Cache API used when available. */
 const memHits = new Map();
@@ -28,6 +43,28 @@ function clientIp(request) {
     (request.headers.get("X-Forwarded-For") || "").split(",")[0].trim() ||
     "unknown"
   );
+}
+
+function requestHost(request) {
+  try {
+    return new URL(request.url).hostname.toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Resolve Turnstile secret: prefer env.TURNSTILE_SECRET_KEY.
+ * Preview-only fallback: Cloudflare always-pass test secret on *.pages.dev.
+ */
+function resolveTurnstileSecret(env, host) {
+  if (env.TURNSTILE_SECRET_KEY) return env.TURNSTILE_SECRET_KEY;
+  if (host.endsWith(".pages.dev")) {
+    // PREVIEW ONLY — Cloudflare Turnstile always-pass TEST secret.
+    // Do not use on production. Replace by setting TURNSTILE_SECRET_KEY.
+    return TURNSTILE_TEST_SECRET_ALWAYS_PASS;
+  }
+  return null;
 }
 
 async function parseBody(request) {
@@ -116,43 +153,37 @@ async function verifyTurnstile(token, secret, ip) {
 }
 
 /**
- * Kit v4: create inactive subscriber, then add to form (triggers double opt-in).
- * https://developers.kit.com/api-reference/subscribers/create-a-subscriber
- * https://developers.kit.com/api-reference/forms/add-subscriber-to-form-by-email-address
+ * Kit public form subscribe (no API key).
+ * Field name from embed: email_address. Form-encoded POST.
+ * Success: 200/201. Validation: 422. Already subscribed often still 200.
  */
-async function subscribeViaKit(email, apiKey, formId, referrer) {
-  const headers = {
-    "Content-Type": "application/json",
-    "X-Kit-Api-Key": apiKey,
-  };
+async function subscribeViaKitPublicForm(email, formId) {
+  const url =
+    "https://app.kit.com/forms/" + encodeURIComponent(formId) + "/subscriptions";
+  const body = new URLSearchParams();
+  body.set("email_address", email);
 
-  const createRes = await fetch("https://api.kit.com/v4/subscribers", {
+  const res = await fetch(url, {
     method: "POST",
-    headers,
-    body: JSON.stringify({
-      email_address: email,
-      state: "inactive",
-    }),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    },
+    body,
   });
-  if (!createRes.ok) {
-    return { ok: false, status: createRes.status };
-  }
 
-  const addBody = { email_address: email };
-  if (referrer) addBody.referrer = referrer;
-
-  const addRes = await fetch(
-    "https://api.kit.com/v4/forms/" + encodeURIComponent(formId) + "/subscribers",
-    {
-      method: "POST",
-      headers,
-      body: JSON.stringify(addBody),
-    }
-  );
-  if (addRes.status === 200 || addRes.status === 201) {
-    return { ok: true };
+  // Do not log response bodies (may include email).
+  if (res.status === 200 || res.status === 201) {
+    return { ok: true, status: res.status };
   }
-  return { ok: false, status: addRes.status };
+  if (res.status === 422) {
+    return { ok: false, status: 422, error: "invalid_email" };
+  }
+  // HTML success redirects sometimes return 302 to a thank-you page
+  if (res.status >= 300 && res.status < 400) {
+    return { ok: true, status: res.status };
+  }
+  return { ok: false, status: res.status, error: "provider_error" };
 }
 
 export async function onRequestPost(context) {
@@ -165,7 +196,7 @@ export async function onRequestPost(context) {
     return json(400, { ok: false, error: "bad_request" });
   }
 
-  // Honeypot: reject silently with fake success (do not reveal)
+  // Honeypot: reject silently with fake success (do not reveal, do not call Kit)
   const honey = body.website || body.company || body._gotcha || "";
   if (typeof honey === "string" && honey.trim() !== "") {
     return json(200, { ok: true });
@@ -182,41 +213,38 @@ export async function onRequestPost(context) {
     return json(429, { ok: false, error: "rate_limited" });
   }
 
-  const turnstileSecret = env.TURNSTILE_SECRET_KEY;
-  if (turnstileSecret) {
-    const token = (
-      body["cf-turnstile-response"] ||
-      body.turnstileToken ||
-      body.cf_turnstile_response ||
-      ""
-    ).toString();
-    if (!token) {
-      return json(400, { ok: false, error: "turnstile_required" });
-    }
-    const ok = await verifyTurnstile(token, turnstileSecret, ip);
-    if (!ok) {
-      return json(400, { ok: false, error: "turnstile_failed" });
-    }
+  const host = requestHost(request);
+  const turnstileSecret = resolveTurnstileSecret(env, host);
+  if (!turnstileSecret) {
+    // Production without a real secret must not accept signups
+    return json(503, { ok: false, error: "turnstile_not_configured" });
   }
 
-  const apiKey = env.KIT_API_KEY;
-  const formId = env.KIT_FORM_ID;
-  if (!apiKey || !formId) {
+  const token = (
+    body["cf-turnstile-response"] ||
+    body.turnstileToken ||
+    body.cf_turnstile_response ||
+    ""
+  ).toString();
+  if (!token) {
+    return json(400, { ok: false, error: "turnstile_required" });
+  }
+  const turnstileOk = await verifyTurnstile(token, turnstileSecret, ip);
+  if (!turnstileOk) {
+    return json(400, { ok: false, error: "turnstile_failed" });
+  }
+
+  const formId = (env.KIT_FORM_ID || DEFAULT_KIT_FORM_ID).toString().trim();
+  if (!formId) {
     return json(503, { ok: false, error: "not_configured" });
   }
 
-  const referrer = (body.referrer || request.headers.get("Referer") || "")
-    .toString()
-    .slice(0, 500);
-
   try {
-    const result = await subscribeViaKit(
-      email,
-      apiKey,
-      formId,
-      referrer || null
-    );
+    const result = await subscribeViaKitPublicForm(email, formId);
     if (!result.ok) {
+      if (result.error === "invalid_email") {
+        return json(400, { ok: false, error: "invalid_email" });
+      }
       return json(502, { ok: false, error: "provider_error" });
     }
     return json(200, { ok: true });
