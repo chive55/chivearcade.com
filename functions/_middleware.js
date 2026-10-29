@@ -47,6 +47,15 @@ export async function onRequest(ctx) {
     );
   }
 
+  // Retired teachers path (also in _redirects); do not bounce via /teachers/.
+  if (
+    url.pathname === "/teachers/index.html" ||
+    url.pathname === "/teachers/" ||
+    url.pathname === "/teachers"
+  ) {
+    return redirect(url, 301, new URL("/" + url.search, url).toString());
+  }
+
   // Canonicalize */index.html -> directory slash URL (or / for root).
   if (url.pathname === "/index.html" || url.pathname.endsWith("/index.html")) {
     const path =
@@ -61,9 +70,10 @@ export async function onRequest(ctx) {
     res = await ctx.env.ASSETS.fetch(new Request(new URL("/404.html", url)));
     res = new Response(res.body, { status: 404, headers: res.headers });
   } else if (url.pathname === "/privacy.html") {
-    // GitHub Pages served /privacy.html with 200; keep that path in place.
+    // GitHub Pages served /privacy.html with 200; Pages ASSETS 308s the .html
+    // path, so fetch the extensionless asset and return it in place.
     const r = await ctx.env.ASSETS.fetch(
-      new Request(new URL("/privacy.html", url), ctx.request)
+      new Request(new URL("/privacy" + url.search, url), ctx.request)
     );
     res = r.status === 200 ? r : await ctx.next();
   } else {
