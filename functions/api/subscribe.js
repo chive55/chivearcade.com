@@ -1,21 +1,22 @@
 /**
  * POST /api/subscribe
- * Newsletter signup: honeypot, Turnstile, rate limit, then Kit public form POST.
- * No database. Emails are never logged. No Kit API key required.
+ * Newsletter signup: honeypot, Turnstile, rate limit, then Kit v4 API.
+ * No database. Emails and KIT_API_KEY are never logged.
  *
- * Kit public form (from embed https://chive-arcade.kit.com/fd74872931/index.js
- * and runtime https://f.convertkit.com/ckjs/ck.1.js):
- *   POST https://app.kit.com/forms/{KIT_FORM_ID}/subscriptions
- *   Body: FormData with email_address (+ referrer, user)
- *   Header: Accept: application/json  (do NOT force Content-Type; FormData sets multipart)
- *   Success ONLY when response JSON has status === "success".
- *   HTTP 200 with status "quarantined" / errors is NOT success.
+ * Kit v4 (authenticated with X-Kit-Api-Key):
+ *   1. POST https://api.kit.com/v4/subscribers
+ *      { email_address, state: "inactive" }  — upsert; inactive so DOI
+ *      does not mark them active before they confirm.
+ *   2. POST https://api.kit.com/v4/forms/{KIT_FORM_ID}/subscribers
+ *      { email_address, referrer? }  — add-by-email; triggers form DOI.
+ * Success only when both return HTTP 2xx. Missing key → 503 not_configured.
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 5;
 const DEFAULT_KIT_FORM_ID = "10114495";
+const KIT_API_BASE = "https://api.kit.com/v4";
 
 /**
  * Cloudflare Turnstile always-pass TEST secret.
@@ -155,83 +156,78 @@ async function verifyTurnstile(token, secret, ip) {
 }
 
 /**
- * Kit public form subscribe (no API key), matching CKJS:
- * FormData + Accept: application/json. Only status==="success" counts.
- * Never logs response bodies (may include email).
+ * Kit v4: create/upsert subscriber as inactive, then add to form by email.
+ * Never logs request/response bodies (may include email) or the API key.
  */
-async function subscribeViaKitPublicForm(email, formId, referrer, request) {
-  const url =
-    "https://app.kit.com/forms/" + encodeURIComponent(formId) + "/subscriptions";
-
-  const fd = new FormData();
-  fd.append("email_address", email);
-  if (referrer) fd.append("referrer", referrer);
-  // CKJS sends a visitor id from localStorage; a random id is better than omitting.
-  fd.append("user", crypto.randomUUID());
-
+async function subscribeViaKitV4(email, formId, apiKey, referrer) {
   const headers = {
+    "Content-Type": "application/json",
     Accept: "application/json",
+    "X-Kit-Api-Key": apiKey,
   };
-  // Forward browser Origin/Referer when present (helps Kit; never log them with email)
-  const origin = request.headers.get("Origin");
-  const reqReferer = request.headers.get("Referer");
-  if (origin) headers.Origin = origin;
-  if (reqReferer) headers.Referer = reqReferer;
 
-  const res = await fetch(url, {
+  // 1) Upsert subscriber — inactive so double opt-in is not skipped.
+  //    Existing subscribers: state is not updated by this endpoint.
+  const createRes = await fetch(KIT_API_BASE + "/subscribers", {
     method: "POST",
     headers,
-    body: fd,
-    redirect: "manual",
+    body: JSON.stringify({
+      email_address: email,
+      state: "inactive",
+    }),
   });
 
-  const httpStatus = res.status;
-
-  // Redirects without a JSON body are not acceptance.
-  if (httpStatus >= 300 && httpStatus < 400) {
+  if (createRes.status < 200 || createRes.status >= 300) {
+    // Drain body without logging contents
+    try {
+      await createRes.arrayBuffer();
+    } catch {
+      /* ignore */
+    }
     return {
       ok: false,
-      httpStatus,
-      kitStatus: "redirect",
-      error: "provider_error",
+      step: "create_subscriber",
+      httpStatus: createRes.status,
     };
   }
-
-  if (!res.ok) {
-    return {
-      ok: false,
-      httpStatus,
-      kitStatus: "http_" + httpStatus,
-      error: "provider_error",
-    };
-  }
-
-  let data;
   try {
-    data = await res.json();
+    await createRes.arrayBuffer();
   } catch {
+    /* ignore */
+  }
+
+  // 2) Add to form by email — triggers the form's double opt-in email.
+  const formBody = { email_address: email };
+  if (referrer) formBody.referrer = referrer;
+
+  const formRes = await fetch(
+    KIT_API_BASE + "/forms/" + encodeURIComponent(formId) + "/subscribers",
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify(formBody),
+    }
+  );
+
+  if (formRes.status < 200 || formRes.status >= 300) {
+    try {
+      await formRes.arrayBuffer();
+    } catch {
+      /* ignore */
+    }
     return {
       ok: false,
-      httpStatus,
-      kitStatus: "non_json",
-      error: "provider_error",
+      step: "add_to_form",
+      httpStatus: formRes.status,
     };
   }
-
-  const kitStatus =
-    data && typeof data.status === "string" ? data.status : "unknown";
-
-  // CKJS: success | quarantined | else errors
-  if (kitStatus === "success") {
-    return { ok: true, httpStatus, kitStatus };
+  try {
+    await formRes.arrayBuffer();
+  } catch {
+    /* ignore */
   }
 
-  return {
-    ok: false,
-    httpStatus,
-    kitStatus,
-    error: "provider_error",
-  };
+  return { ok: true, httpStatus: formRes.status };
 }
 
 export async function onRequestPost(context) {
@@ -281,6 +277,12 @@ export async function onRequestPost(context) {
     return json(400, { ok: false, error: "turnstile_failed" });
   }
 
+  const apiKey =
+    typeof env.KIT_API_KEY === "string" ? env.KIT_API_KEY.trim() : "";
+  if (!apiKey) {
+    return json(503, { ok: false, error: "not_configured" });
+  }
+
   const formId = (env.KIT_FORM_ID || DEFAULT_KIT_FORM_ID).toString().trim();
   if (!formId) {
     return json(503, { ok: false, error: "not_configured" });
@@ -291,24 +293,28 @@ export async function onRequestPost(context) {
     .slice(0, 500);
 
   try {
-    const result = await subscribeViaKitPublicForm(
+    const result = await subscribeViaKitV4(
       email,
       formId,
-      referrer || null,
-      request
+      apiKey,
+      referrer || null
     );
     if (!result.ok) {
-      // 502 with Kit's status; never include email or raw Kit body.
+      // 502; never include email, key, or Kit body.
       return json(502, {
         ok: false,
         error: "provider_error",
-        kit_status: result.kitStatus || "unknown",
+        kit_step: result.step || "unknown",
         kit_http: result.httpStatus || null,
       });
     }
     return json(200, { ok: true });
   } catch {
-    return json(502, { ok: false, error: "provider_error", kit_status: "exception" });
+    return json(502, {
+      ok: false,
+      error: "provider_error",
+      kit_step: "exception",
+    });
   }
 }
 
