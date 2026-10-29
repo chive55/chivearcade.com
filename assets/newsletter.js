@@ -28,6 +28,17 @@
     } catch (e) {}
   }
 
+  function ensureTurnstile(form) {
+    if (!form || !window.turnstile || form.dataset.widgetId) return;
+    var mount = qs(form, ".nl-turnstile");
+    if (!mount) return;
+    var wid = window.turnstile.render(mount, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: "dark",
+    });
+    form.dataset.widgetId = wid;
+  }
+
   function bindForm(form) {
     if (!form || form.dataset.nlBound) return;
     form.dataset.nlBound = "1";
@@ -35,15 +46,8 @@
     var email = qs(form, 'input[type="email"]');
     var btn = qs(form, 'button[type="submit"]');
     var msg = qs(form, ".nl-msg");
-    var mount = qs(form, ".nl-turnstile");
 
-    if (mount && window.turnstile && !form.dataset.widgetId) {
-      var wid = window.turnstile.render(mount, {
-        sitekey: TURNSTILE_SITE_KEY,
-        theme: "dark",
-      });
-      form.dataset.widgetId = wid;
-    }
+    ensureTurnstile(form);
 
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
@@ -118,7 +122,10 @@
   }
 
   function initAll() {
-    document.querySelectorAll("form.nl-form").forEach(bindForm);
+    document.querySelectorAll("form.nl-form").forEach(function (form) {
+      bindForm(form);
+      ensureTurnstile(form);
+    });
   }
 
   window.onNewsletterTurnstileLoad = function () {
