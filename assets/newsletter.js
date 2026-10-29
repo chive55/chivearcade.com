@@ -1,12 +1,9 @@
 /**
  * Newsletter signup client.
- * PREVIEW ONLY: Cloudflare Turnstile always-pass TEST site key.
- * Replace with a real Turnstile widget site key before launch.
- * Docs: https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+ * Cloudflare Turnstile managed widget site key (chivearcade newsletter).
  */
 (function () {
-  // Cloudflare Turnstile TEST key (always passes). Swap for a real site key before launch.
-  var TURNSTILE_SITE_KEY = "1x00000000000000000000AA";
+  var TURNSTILE_SITE_KEY = "0x4AAAAAAFruQoFefM6gIyaK";
 
   function qs(el, sel) {
     return el.querySelector(sel);
