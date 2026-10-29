@@ -3,11 +3,13 @@
  * Newsletter signup: honeypot, Turnstile, rate limit, then Kit public form POST.
  * No database. Emails are never logged. No Kit API key required.
  *
- * Kit public form (double opt-in):
+ * Kit public form (from embed https://chive-arcade.kit.com/fd74872931/index.js
+ * and runtime https://f.convertkit.com/ckjs/ck.1.js):
  *   POST https://app.kit.com/forms/{KIT_FORM_ID}/subscriptions
- *   Content-Type: application/x-www-form-urlencoded
- *   Body: email_address=...
- * Embed: https://chive-arcade.kit.com/fd74872931/index.js (form 10114495)
+ *   Body: FormData with email_address (+ referrer, user)
+ *   Header: Accept: application/json  (do NOT force Content-Type; FormData sets multipart)
+ *   Success ONLY when response JSON has status === "success".
+ *   HTTP 200 with status "quarantined" / errors is NOT success.
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -153,37 +155,83 @@ async function verifyTurnstile(token, secret, ip) {
 }
 
 /**
- * Kit public form subscribe (no API key).
- * Field name from embed: email_address. Form-encoded POST.
- * Success: 200/201. Validation: 422. Already subscribed often still 200.
+ * Kit public form subscribe (no API key), matching CKJS:
+ * FormData + Accept: application/json. Only status==="success" counts.
+ * Never logs response bodies (may include email).
  */
-async function subscribeViaKitPublicForm(email, formId) {
+async function subscribeViaKitPublicForm(email, formId, referrer, request) {
   const url =
     "https://app.kit.com/forms/" + encodeURIComponent(formId) + "/subscriptions";
-  const body = new URLSearchParams();
-  body.set("email_address", email);
+
+  const fd = new FormData();
+  fd.append("email_address", email);
+  if (referrer) fd.append("referrer", referrer);
+  // CKJS sends a visitor id from localStorage; a random id is better than omitting.
+  fd.append("user", crypto.randomUUID());
+
+  const headers = {
+    Accept: "application/json",
+  };
+  // Forward browser Origin/Referer when present (helps Kit; never log them with email)
+  const origin = request.headers.get("Origin");
+  const reqReferer = request.headers.get("Referer");
+  if (origin) headers.Origin = origin;
+  if (reqReferer) headers.Referer = reqReferer;
 
   const res = await fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
-    },
-    body,
+    headers,
+    body: fd,
+    redirect: "manual",
   });
 
-  // Do not log response bodies (may include email).
-  if (res.status === 200 || res.status === 201) {
-    return { ok: true, status: res.status };
+  const httpStatus = res.status;
+
+  // Redirects without a JSON body are not acceptance.
+  if (httpStatus >= 300 && httpStatus < 400) {
+    return {
+      ok: false,
+      httpStatus,
+      kitStatus: "redirect",
+      error: "provider_error",
+    };
   }
-  if (res.status === 422) {
-    return { ok: false, status: 422, error: "invalid_email" };
+
+  if (!res.ok) {
+    return {
+      ok: false,
+      httpStatus,
+      kitStatus: "http_" + httpStatus,
+      error: "provider_error",
+    };
   }
-  // HTML success redirects sometimes return 302 to a thank-you page
-  if (res.status >= 300 && res.status < 400) {
-    return { ok: true, status: res.status };
+
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    return {
+      ok: false,
+      httpStatus,
+      kitStatus: "non_json",
+      error: "provider_error",
+    };
   }
-  return { ok: false, status: res.status, error: "provider_error" };
+
+  const kitStatus =
+    data && typeof data.status === "string" ? data.status : "unknown";
+
+  // CKJS: success | quarantined | else errors
+  if (kitStatus === "success") {
+    return { ok: true, httpStatus, kitStatus };
+  }
+
+  return {
+    ok: false,
+    httpStatus,
+    kitStatus,
+    error: "provider_error",
+  };
 }
 
 export async function onRequestPost(context) {
@@ -216,7 +264,6 @@ export async function onRequestPost(context) {
   const host = requestHost(request);
   const turnstileSecret = resolveTurnstileSecret(env, host);
   if (!turnstileSecret) {
-    // Production without a real secret must not accept signups
     return json(503, { ok: false, error: "turnstile_not_configured" });
   }
 
@@ -239,17 +286,29 @@ export async function onRequestPost(context) {
     return json(503, { ok: false, error: "not_configured" });
   }
 
+  const referrer = (body.referrer || request.headers.get("Referer") || "")
+    .toString()
+    .slice(0, 500);
+
   try {
-    const result = await subscribeViaKitPublicForm(email, formId);
+    const result = await subscribeViaKitPublicForm(
+      email,
+      formId,
+      referrer || null,
+      request
+    );
     if (!result.ok) {
-      if (result.error === "invalid_email") {
-        return json(400, { ok: false, error: "invalid_email" });
-      }
-      return json(502, { ok: false, error: "provider_error" });
+      // 502 with Kit's status; never include email or raw Kit body.
+      return json(502, {
+        ok: false,
+        error: "provider_error",
+        kit_status: result.kitStatus || "unknown",
+        kit_http: result.httpStatus || null,
+      });
     }
     return json(200, { ok: true });
   } catch {
-    return json(502, { ok: false, error: "provider_error" });
+    return json(502, { ok: false, error: "provider_error", kit_status: "exception" });
   }
 }
 

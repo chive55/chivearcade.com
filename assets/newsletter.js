@@ -98,6 +98,14 @@
           } else if (err === "turnstile_required" || err === "turnstile_failed") {
             setMsg(msg, "err", "Please complete the check and try again.");
             resetTurnstile(form);
+          } else if (err === "provider_error") {
+            var ks = data.kit_status || "";
+            if (ks === "quarantined") {
+              setMsg(msg, "err", "Kit blocked this signup as automated. Try again from the form, or email us.");
+            } else {
+              setMsg(msg, "err", "Signup did not go through. Try again.");
+            }
+            resetTurnstile(form);
           } else {
             setMsg(msg, "err", "Something went wrong. Try again.");
             resetTurnstile(form);
