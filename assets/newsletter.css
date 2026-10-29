@@ -47,7 +47,7 @@
 .nl-row button:disabled{opacity:.6;cursor:wait}
 .nl-consent{margin:0;font-size:12px;color:var(--muted,#9AA7C7);line-height:1.45}
 .nl-consent a{color:var(--cyan,#53E6FF)}
-.nl-msg{margin:0;font-size:14px;min-height:1.2em}
+.nl-msg{margin:0;font-size:14px;min-height:1.4em}
 .nl-msg[data-state="ok"]{color:#7dffb3}
 .nl-msg[data-state="err"]{color:#FF4D68}
 .nl-hp{
@@ -59,7 +59,7 @@
   overflow:hidden!important;
   opacity:0!important;
 }
-.nl-turnstile{min-height:65px}
+.nl-turnstile{min-height:70px}
 /* Compact footer variant */
 .nl-foot{
   margin:14px auto 10px;
@@ -80,7 +80,7 @@
 .nl-foot .nl-row input[type="email"]{padding:10px 14px;font-size:14px}
 .nl-foot .nl-row button{padding:10px 16px;font-size:14px}
 .nl-foot .nl-consent{font-size:11px}
-.nl-foot .nl-turnstile{transform:scale(.85);transform-origin:left top;min-height:55px}
+.nl-foot .nl-turnstile{transform:scale(.85);transform-origin:left top;min-height:65px}
 @media(max-width:520px){
   .nl-row button{width:100%}
 }

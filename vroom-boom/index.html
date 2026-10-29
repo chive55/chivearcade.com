@@ -46,8 +46,10 @@
   .c{color:var(--cyan)}
   .vb-page{padding:10px 0 40px}
   .vb-art{
-    display:block; width:100%; max-width:720px; margin:0 auto 18px;
+    display:block; width:100%; max-width:720px; height:auto; margin:0 auto 18px;
+    aspect-ratio:1232/706; object-fit:cover;
     border-radius:18px; border:1px solid rgba(83,230,255,.18);
+    background:#070b12;
   }
   .vb-page h1{
     font-family:'Russo One',sans-serif; font-weight:400;
@@ -75,6 +77,8 @@
   .nl-wrap .nl-box{width:100%}
   .more{text-align:center; margin-top:28px; color:var(--muted); font-size:14px}
   .more a{color:var(--cyan)}
+  .nl-box .nl-turnstile{min-height:70px}
+  .nl-box .nl-msg{min-height:1.4em}
 </style>
 </head>
 <body>
@@ -87,7 +91,7 @@
   </header>
 
 <main id="main" class="vb-page">
-  <img class="vb-art" src="/vroom-boom/key-art.jpg" width="720" height="405" alt="Vroom Boom key art">
+  <img class="vb-art" src="/vroom-boom/key-art.jpg" width="1232" height="706" alt="Vroom Boom key art" decoding="async">
   <h1>Vroom <span class="c">Boom</span></h1>
   <p class="lead">Arcade car combat coming to Steam in 2027. Wishlist it, play the itch build, and get the occasional update.</p>
 
@@ -106,10 +110,10 @@
         <div class="nl-row">
           <label class="visually-hidden" for="nl-email-vb" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">Email</label>
           <input id="nl-email-vb" type="email" name="email" autocomplete="email" required placeholder="you@email.com" aria-describedby="nl-consent-vb">
-          <button type="submit">Subscribe</button>
+          <button type="submit">Sign me up</button>
         </div>
         <div class="nl-turnstile" data-turnstile></div>
-        <p id="nl-consent-vb" class="nl-consent">Occasional Vroom Boom news. Unsubscribe anytime. <a href="/privacy">Privacy</a>.</p>
+        <p id="nl-consent-vb" class="nl-consent">Vroom Boom news now and then. Unsubscribe anytime. <a href="/privacy.html">Privacy</a>.</p>
         <p class="nl-msg" role="status" aria-live="polite"></p>
       </form>
     </section>
