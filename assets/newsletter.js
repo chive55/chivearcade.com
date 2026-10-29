@@ -127,9 +127,45 @@
     initAll();
   };
 
+  function loadTurnstileScript() {
+    if (window.turnstile) {
+      initAll();
+      return;
+    }
+    if (document.querySelector('script[data-nl-turnstile]')) return;
+    var s = document.createElement("script");
+    s.src =
+      "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onNewsletterTurnstileLoad";
+    s.async = true;
+    s.defer = true;
+    s.setAttribute("data-nl-turnstile", "1");
+    document.head.appendChild(s);
+  }
+
+  /** Load Turnstile after load so it does not contend with LCP (fonts/images). */
+  function scheduleTurnstile() {
+    function kick() {
+      var run = function () {
+        setTimeout(loadTurnstileScript, 1500);
+      };
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(run, { timeout: 2000 });
+      } else {
+        run();
+      }
+    }
+    if (document.readyState === "complete") kick();
+    else window.addEventListener("load", kick, { once: true });
+  }
+
+  // Bind forms early (submit works once Turnstile arrives); widget mounts on load.
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initAll);
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("form.nl-form").forEach(bindForm);
+      scheduleTurnstile();
+    });
   } else {
-    initAll();
+    document.querySelectorAll("form.nl-form").forEach(bindForm);
+    scheduleTurnstile();
   }
 })();

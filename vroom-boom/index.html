@@ -23,6 +23,7 @@
 <meta name="twitter:title" content="Vroom Boom | Chive Arcade">
 <meta name="twitter:description" content="Vroom Boom arcade car combat. Wishlist on Steam, play the itch build, and get occasional news.">
 <meta name="twitter:image" content="https://chivearcade.com/vroom-boom/key-art.jpg">
+<link rel="preload" href="/vroom-boom/key-art.jpg" as="image" fetchpriority="high">
 <link rel="preload" href="/assets/fonts/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts.css">
@@ -93,7 +94,7 @@
   </header>
 
 <main id="main" class="vb-page">
-  <img class="vb-art" src="/vroom-boom/key-art.jpg" width="1232" height="706" alt="Vroom Boom key art" decoding="async">
+  <img class="vb-art" src="/vroom-boom/key-art.jpg" width="1232" height="706" alt="Vroom Boom key art" fetchpriority="high" decoding="sync">
   <h1>Vroom <span class="c">Boom</span></h1>
   <p class="lead">Arcade car combat coming to Steam in 2027. Wishlist it, play the itch build, and get the occasional update.</p>
 
@@ -134,7 +135,6 @@
 </div>
 <script src="/assets/site-nav.js" defer></script>
 <script src="/assets/newsletter.js" defer></script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onNewsletterTurnstileLoad" async defer></script>
 <script>document.getElementById('foot-year').textContent=new Date().getFullYear();</script>
 </body>
 </html>

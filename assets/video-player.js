@@ -1,7 +1,8 @@
 /**
  * Lazy video load + pause/play control.
- * Respects prefers-reduced-motion. Prefers mobile trailer; HD only on wide screens
- * without Save-Data. Visible control text: "Pause video" / "Play video".
+ * Hero autoplay is deferred until after load so the poster can be LCP.
+ * Respects prefers-reduced-motion. Mobile trailer by default; HD only on wide
+ * screens without Save-Data. Control labels: "Pause video" / "Play video".
  */
 (function () {
   var reduceMotion =
@@ -84,7 +85,6 @@
       setBtn(btn, false);
     });
 
-    // Strip HTML autoplay; JS decides.
     video.removeAttribute("autoplay");
 
     if (!wantAuto) {
@@ -93,6 +93,25 @@
     }
 
     return { play: play, pause: pause, loadSrc: loadSrc, auto: true };
+  }
+
+  function afterLoad(fn) {
+    if (document.readyState === "complete") fn();
+    else window.addEventListener("load", fn, { once: true });
+  }
+
+  /** Defer past typical mobile LCP so poster/image wins, not the video frame. */
+  function afterLcpQuiet(fn) {
+    afterLoad(function () {
+      var run = function () {
+        setTimeout(fn, 2000);
+      };
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(run, { timeout: 2500 });
+      } else {
+        run();
+      }
+    });
   }
 
   function observeAndMaybePlay(video, ctrl, rootMargin) {
@@ -120,12 +139,20 @@
   var hero = document.querySelector("video.vb-trailer");
   if (hero) {
     var heroCtrl = wire(hero, { pickSrc: heroSrc, autoplay: true });
-    observeAndMaybePlay(hero, heroCtrl, "80px");
+    // Hero is above the fold: do not start until after LCP quiet period.
+    if (heroCtrl.auto) {
+      afterLcpQuiet(function () {
+        heroCtrl.play();
+      });
+    }
   }
 
   var clips = document.querySelectorAll("video[data-lazy]");
   clips.forEach(function (v) {
     var ctrl = wire(v, { autoplay: true });
-    observeAndMaybePlay(v, ctrl, "200px");
+    // Below-fold clips: wait for LCP quiet, then IO.
+    afterLcpQuiet(function () {
+      observeAndMaybePlay(v, ctrl, "200px");
+    });
   });
 })();
