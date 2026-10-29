@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vroom Boom Press Kit | Chive Arcade</title>
+<meta name="description" content="Press kit for Vroom Boom, arcade car combat from Chive Arcade. Screenshots, trailer, logo, and a downloadable zip of assets. Wishlist on Steam.">
+<meta name="theme-color" content="#080B18">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site-nav.css">
+<link rel="canonical" href="https://chivearcade.com/vroom-boom/press/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chive Arcade">
+<meta property="og:title" content="Vroom Boom Press Kit | Chive Arcade">
+<meta property="og:description" content="Press kit for Vroom Boom, arcade car combat from Chive Arcade. Screenshots, trailer, logo, and a downloadable zip of assets. Wishlist on Steam.">
+<meta property="og:url" content="https://chivearcade.com/vroom-boom/press/">
+<meta property="og:image" content="https://chivearcade.com/vroom-boom/press/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="687">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vroom Boom Press Kit | Chive Arcade">
+<meta name="twitter:description" content="Press kit for Vroom Boom, arcade car combat from Chive Arcade. Screenshots, trailer, logo, and a downloadable zip of assets. Wishlist on Steam.">
+<meta name="twitter:image" content="https://chivearcade.com/vroom-boom/press/assets/og.jpg">
+<link rel="preload" href="/assets/fonts/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+  :root{
+    --bg:#080B18; --panel:#111A38; --cyan:#53E6FF; --yellow:#FFD85A; --pink:#FF4D68;
+    --text:#EAF2FF; --muted:#9AA7C7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    line-height:1.6; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(83,230,255,.12), transparent),
+      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(255,77,104,.10), transparent);
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px; position:relative; z-index:1}
+  section{padding:40px 0}
+  h1{
+    font-family:'Russo One',sans-serif; font-weight:400;
+    font-size:clamp(28px,5.5vw,44px); letter-spacing:2px; line-height:1.15;
+    text-align:center; margin:8px 0 14px;
+  }
+  h2{
+    font-family:'Russo One',sans-serif; font-weight:400; letter-spacing:2px;
+    font-size:clamp(18px,3.5vw,26px); margin-bottom:14px;
+  }
+  h2 .c{color:var(--cyan)}
+  .lead{
+    text-align:center; color:var(--muted); font-size:clamp(15px,2.2vw,18px);
+    max-width:640px; margin:0 auto 22px;
+  }
+  .hero-logo{
+    display:block; width:min(360px,70vw); height:auto; margin:18px auto 8px;
+    filter:drop-shadow(0 0 22px rgba(83,230,255,.28));
+  }
+  .ctas{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:18px 0 8px}
+  .btn{
+    font-family:'Russo One',sans-serif; font-weight:400; letter-spacing:1px; font-size:14px;
+    padding:14px 26px; border-radius:999px; text-decoration:none; display:inline-block;
+    transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--cyan); color:#06121A; box-shadow:0 6px 26px rgba(83,230,255,.35)}
+  .btn-ghost{border:2px solid var(--pink); color:var(--pink)}
+  .btn-steam{background:#c8ed38; color:#0a1013; box-shadow:0 6px 0 #789011}
+  .desc{
+    background:var(--panel); border:1px solid rgba(83,230,255,.14); border-radius:16px;
+    padding:22px 24px; color:#c9d6db; font-size:16px; line-height:1.55;
+  }
+  .features{
+    list-style:none; display:grid; gap:10px;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  }
+  .features li{
+    background:var(--panel); border:1px solid rgba(83,230,255,.14); border-radius:14px;
+    padding:14px 16px; color:#c9d6db; font-size:15px;
+  }
+  .features b{color:var(--yellow); font-weight:600; display:block; margin-bottom:2px}
+  .shots{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;
+  }
+  .shots figure{margin:0}
+  .shots img{
+    width:100%; height:auto; display:block; border-radius:12px; background:#000;
+    aspect-ratio:16/9; object-fit:cover;
+  }
+  .shots figcaption{font-size:13px; color:var(--muted); padding:6px 2px 0}
+  .video-wrap{
+    background:#000; border-radius:14px; overflow:hidden;
+    border:1px solid rgba(83,230,255,.14);
+  }
+  .video-wrap video{width:100%; height:auto; display:block; aspect-ratio:16/9; background:#000}
+  .video-wrap.portrait{max-width:320px; margin:0 auto}
+  .video-wrap.portrait video{aspect-ratio:9/16}
+  .meta-row{
+    display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  }
+  .meta-card{
+    background:var(--panel); border:1px solid rgba(83,230,255,.14); border-radius:14px;
+    padding:18px 20px;
+  }
+  .meta-card h3{
+    font-family:'Russo One',sans-serif; font-weight:400; font-size:15px;
+    letter-spacing:1px; color:var(--cyan); margin-bottom:8px;
+  }
+  .meta-card a{color:var(--cyan); word-break:break-word}
+  .meta-card p{color:#c9d6db; font-size:15px}
+  .crumb{font-size:13px; color:var(--muted); margin:8px 0 0}
+  .crumb a{color:var(--cyan); text-decoration:none}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Vroom Boom","url":"https://chivearcade.com/vroom-boom/","description":"Arcade car combat from Chive Arcade. Pick a car, load it with rockets, mines and missiles, and drive. Fight a pack of bot cars in a battle royale. Hold out in wave survival. Team up with a friend in 2 player co-op, or face a friend in local split screen.","genre":["Car combat","Action","Arcade"],"gamePlatform":"PC","playMode":["SinglePlayer","MultiPlayer"],"author":{"@type":"Organization","name":"Chive Arcade","url":"https://chivearcade.com/"},"sameAs":["https://store.steampowered.com/app/5446380"],"image":"https://chivearcade.com/vroom-boom/press/assets/og.jpg","trailer":{"@type":"VideoObject","name":"Vroom Boom trailer","contentUrl":"https://chivearcade.com/vroom-boom/press/assets/trailer.mp4","thumbnailUrl":"https://chivearcade.com/vroom-boom/press/assets/trailer-poster.jpg","uploadDate":"2026-10-28"}}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head">
+    <a class="brand" href="/"><img src="/mark-80.png" width="65" height="40" alt=""><span>CHIVE <em>ARCADE</em></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav" aria-label="Main"><ul><li><a href="/vroom-boom/" aria-current="page">Vroom Boom</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a class="nav-steam" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=press" target="_blank" rel="noopener">Wishlist on Steam</a></li></ul><ul class="site-social" aria-label="Chive Arcade on social media"><li><a href="https://x.com/ChiveArcade" target="_blank" rel="noopener">X</a></li><li><a href="https://www.tiktok.com/@chive.arcade" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.youtube.com/@ChiveArcade" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.instagram.com/chivearcade" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://bsky.app/profile/chivearcade.com" target="_blank" rel="noopener">Bluesky</a></li></ul></nav>
+  </header>
+
+<main id="main">
+  <p class="crumb"><a href="/vroom-boom/">Vroom Boom</a> / Press Kit</p>
+
+  <header class="hero" style="text-align:center;padding:20px 0 10px">
+    <picture>
+      <source type="image/webp" srcset="/vroom-boom/press/assets/logo.webp">
+      <img class="hero-logo" src="/vroom-boom/press/assets/logo.png" srcset="/vroom-boom/press/assets/logo.png 1x, /vroom-boom/press/assets/logo@2x.png 2x" width="520" height="75" alt="Vroom Boom logo" fetchpriority="high">
+    </picture>
+    <h1>Vroom Boom Press Kit</h1>
+    <p class="lead">Assets and facts for writers, creators, and partners covering arcade car combat from Chive Arcade.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="/vroom-boom/press/press-kit.zip">Download press kit zip</a>
+      <a class="btn btn-steam" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=press" target="_blank" rel="noopener">Wishlist on Steam</a>
+    </div>
+  </header>
+
+  <section aria-labelledby="about-title">
+    <h2 id="about-title">About the <span class="c">game</span></h2>
+    <p class="desc">Vroom Boom is arcade car combat from Chive Arcade. Pick a car, load it with rockets, mines and missiles, and drive. Fight a pack of bot cars in a battle royale. Hold out in wave survival. Team up with a friend in 2 player co-op, or face a friend in local split screen. Wishlist it on Steam.</p>
+  </section>
+
+  <section aria-labelledby="features-title">
+    <h2 id="features-title">Key <span class="c">features</span></h2>
+    <ul class="features">
+      <li><b>Online play</b> 1v1, King of the Hill and Capture the Flag.</li>
+      <li><b>Battle royale</b> A pack of bot cars, one arena, last car running wins.</li>
+      <li><b>Wave survival</b> Keep going as the waves get harder.</li>
+      <li><b>2 player co-op</b> Team up with a friend.</li>
+      <li><b>Local split screen</b> Versus for 2 players on one screen.</li>
+      <li><b>Weapons</b> Rockets, mines and missiles. Pick how you want to fight.</li>
+      <li><b>Boost and jump</b> Get out of trouble, or jump into it.</li>
+      <li><b>Arenas and garage</b> Multiple arenas to fight in. Earn more cars as you play, each with its own special.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="shots-title">
+    <h2 id="shots-title">Screen<span class="c">shots</span></h2>
+    <div class="shots">
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="/vroom-boom/press/assets/shot-opening_drive.webp">
+          <img src="/vroom-boom/press/assets/shot-opening_drive.jpg" width="1280" height="720" alt="Opening drive through a Vroom Boom arena" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Opening drive</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="/vroom-boom/press/assets/shot-multi_car_brawl.webp">
+          <img src="/vroom-boom/press/assets/shot-multi_car_brawl.jpg" width="1280" height="720" alt="Multi car brawl in a Vroom Boom arena" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Multi car brawl</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="/vroom-boom/press/assets/shot-wreck_chain.webp">
+          <img src="/vroom-boom/press/assets/shot-wreck_chain.jpg" width="1280" height="720" alt="Wreck chain mid fight in Vroom Boom" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Wreck chain</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="/vroom-boom/press/assets/shot-special_attacks.webp">
+          <img src="/vroom-boom/press/assets/shot-special_attacks.jpg" width="1280" height="720" alt="Special attacks during late waves in Vroom Boom" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Special attacks</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="/vroom-boom/press/assets/shot-split_screen.webp">
+          <img src="/vroom-boom/press/assets/shot-split_screen.jpg" width="1280" height="720" alt="Local split screen versus in Vroom Boom" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Local split screen</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="/vroom-boom/press/assets/shot-win_screen.webp">
+          <img src="/vroom-boom/press/assets/shot-win_screen.jpg" width="1280" height="720" alt="Win screen after a Vroom Boom match" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Win screen</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="trailer-title">
+    <h2 id="trailer-title">Trail<span class="c">er</span></h2>
+    <div class="video-wrap">
+      <video controls preload="none" playsinline poster="/vroom-boom/press/assets/trailer-poster.jpg" width="1280" height="720" aria-label="Vroom Boom trailer">
+        <source src="/vroom-boom/press/assets/trailer.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p class="lead" style="margin-top:14px">Optional vertical clip for social posts:</p>
+    <div class="video-wrap portrait">
+      <video controls preload="none" playsinline poster="/vroom-boom/press/assets/shot-split_screen.jpg" width="720" height="1280" aria-label="Vroom Boom local split screen clip, vertical">
+        <source src="/vroom-boom/press/assets/clip-split-screen-9x16.mp4" type="video/mp4">
+      </video>
+    </div>
+  </section>
+
+  <section aria-labelledby="logo-title">
+    <h2 id="logo-title">Lo<span class="c">go</span></h2>
+    <div class="meta-card" style="text-align:center">
+      <picture>
+        <source type="image/webp" srcset="/vroom-boom/press/assets/logo.webp">
+        <img src="/vroom-boom/press/assets/logo.png" srcset="/vroom-boom/press/assets/logo.png 1x, /vroom-boom/press/assets/logo@2x.png 2x" width="520" height="75" alt="Vroom Boom logo on dark background" loading="lazy" decoding="async" style="width:min(360px,70vw);height:auto;margin:8px auto;display:block">
+      </picture>
+      <p><a href="/vroom-boom/press/assets/logo.png">PNG</a> · <a href="/vroom-boom/press/assets/logo@2x.png">PNG 2x</a> · <a href="/vroom-boom/press/assets/logo.webp">WebP</a></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="links-title">
+    <h2 id="links-title">Links and <span class="c">contact</span></h2>
+    <div class="meta-row">
+      <div class="meta-card">
+        <h3>Steam</h3>
+        <p><a href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=press" target="_blank" rel="noopener">store.steampowered.com/app/5446380</a></p>
+      </div>
+      <div class="meta-card">
+        <h3>Contact</h3>
+        <p><a href="mailto:mail@chivearcade.com">mail@chivearcade.com</a></p>
+      </div>
+      <div class="meta-card">
+        <h3>Download</h3>
+        <p><a href="/vroom-boom/press/press-kit.zip">Download the press kit zip</a> with screenshots, logo, trailer, and a fact sheet.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <footer class="site-foot">
+    <nav aria-label="Footer"><ul><li><a href="/vroom-boom/">Vroom Boom</a></li><li><a href="/vroom-boom/press/">Press Kit</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a href="mailto:mail@chivearcade.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
+    <p><a href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=press" target="_blank" rel="noopener">Vroom Boom is coming to Steam: wishlist now</a></p>
+    <p><a href="https://x.com/ChiveArcade">X</a> · <a href="https://www.tiktok.com/@chive.arcade">TikTok</a> · <a href="https://www.youtube.com/@ChiveArcade">YouTube</a> · <a href="https://www.instagram.com/chivearcade">Instagram</a> · <a href="https://bsky.app/profile/chivearcade.com">Bluesky</a> · <a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://github.com/chive55">GitHub</a></p>
+  </footer>
+</div>
+<a class="sticky-wish" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=press" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a>
+<script src="/assets/site-nav.js" defer></script>
+</body>
+</html>
