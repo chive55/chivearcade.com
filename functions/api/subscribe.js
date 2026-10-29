@@ -4,12 +4,13 @@
  * No database. Emails and KIT_API_KEY are never logged.
  *
  * Kit v4 (authenticated with X-Kit-Api-Key):
- *   1. POST https://api.kit.com/v4/subscribers
- *      { email_address, state: "inactive" }  — upsert; inactive so DOI
- *      does not mark them active before they confirm.
- *   2. POST https://api.kit.com/v4/forms/{KIT_FORM_ID}/subscribers
- *      { email_address, referrer? }  — add-by-email; triggers form DOI.
- * Success only when both return HTTP 2xx. Missing key → 503 not_configured.
+ *   0. GET /v4/account — require a verified sending address (else 503
+ *      sending_not_ready). Unverified "from" addresses cannot deliver DOI.
+ *   1. POST /v4/subscribers { email_address, state: "inactive" } — upsert.
+ *   2. POST /v4/forms/{KIT_FORM_ID}/subscribers { email_address } — add-by-email.
+ *      Step 2 is what triggers the form's double opt-in incentive email.
+ * Success only when both write calls return HTTP 2xx AND sending is verified.
+ * Missing key → 503 not_configured.
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -159,14 +160,16 @@ async function verifyTurnstile(token, secret, ip) {
  * Kit v4: create/upsert subscriber as inactive, then add to form by email.
  * Never logs request/response bodies (may include email) or the API key.
  */
-/** Parse Kit JSON; return only non-secret fields (never email). */
+/** Parse Kit JSON; return only non-secret fields (never subscriber email). */
 async function readKitSafe(res) {
   const httpStatus = res.status;
   let state = null;
+  let id = null;
   try {
     const data = await res.json();
     const sub = data && data.subscriber;
     if (sub && typeof sub.state === "string") state = sub.state;
+    if (sub && typeof sub.id === "number") id = sub.id;
   } catch {
     try {
       await res.arrayBuffer();
@@ -174,9 +177,58 @@ async function readKitSafe(res) {
       /* ignore */
     }
   }
-  return { httpStatus, state };
+  return { httpStatus, state, id };
 }
 
+/**
+ * Kit cannot deliver DOI / incentive email without a verified sending address.
+ * Returns { ok, verified, addresses } — addresses omit nothing secret; never logs.
+ */
+async function checkKitSendingReady(apiKey) {
+  const res = await fetch(KIT_API_BASE + "/account", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "X-Kit-Api-Key": apiKey,
+    },
+  });
+  const httpStatus = res.status;
+  let data = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+  if (httpStatus < 200 || httpStatus >= 300 || !data || !data.account) {
+    return {
+      ok: false,
+      httpStatus,
+      verified: false,
+      addresses: [],
+      error: "account_lookup_failed",
+    };
+  }
+  const raw = Array.isArray(data.account.sending_addresses)
+    ? data.account.sending_addresses
+    : [];
+  const addresses = raw.map((s) => ({
+    email_address: typeof s.email_address === "string" ? s.email_address : null,
+    status: s.status || null,
+    is_default: !!s.is_default,
+    is_verified: !!s.is_verified,
+  }));
+  const verified = addresses.some((a) => a.is_verified);
+  return { ok: true, httpStatus, verified, addresses };
+}
+
+/**
+ * Kit v4 DOI flow (docs):
+ *   POST /v4/subscribers { email_address, state: "inactive" }  — upsert
+ *   POST /v4/forms/{id}/subscribers { email_address }         — add-by-email
+ * The form add is what triggers the double opt-in incentive email when the
+ * form has DOI enabled. Create alone does not send it. Already-on-form (HTTP
+ * 200) does not resend. Never logs email or the API key.
+ */
 async function subscribeViaKitV4(email, formId, apiKey, referrer) {
   const headers = {
     "Content-Type": "application/json",
@@ -202,10 +254,11 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
       step: "create_subscriber",
       httpStatus: create.httpStatus,
       subscriberState: create.state,
+      subscriberId: create.id,
     };
   }
 
-  // 2) Add to form by email — triggers the form's double opt-in email.
+  // 2) Add to form by email — THIS call triggers the form's DOI incentive email.
   const formBody = { email_address: email };
   if (referrer) formBody.referrer = referrer;
 
@@ -225,15 +278,21 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
       step: "add_to_form",
       httpStatus: form.httpStatus,
       subscriberState: form.state || create.state,
+      subscriberId: form.id || create.id,
       createHttp: create.httpStatus,
     };
   }
+
+  // 201 = newly added (DOI should fire). 200 = already on form (no resend).
+  const doiTriggered = form.httpStatus === 201;
 
   return {
     ok: true,
     httpStatus: form.httpStatus,
     createHttp: create.httpStatus,
     subscriberState: form.state || create.state,
+    subscriberId: form.id || create.id,
+    doiTriggered,
   };
 }
 
@@ -295,6 +354,34 @@ export async function onRequestPost(context) {
     return json(503, { ok: false, error: "not_configured" });
   }
 
+  // DOI / incentive email cannot send without a verified Kit sending address.
+  let sending;
+  try {
+    sending = await checkKitSendingReady(apiKey);
+  } catch {
+    return json(502, {
+      ok: false,
+      error: "provider_error",
+      kit_step: "account_lookup",
+    });
+  }
+  if (!sending.ok) {
+    return json(502, {
+      ok: false,
+      error: "provider_error",
+      kit_step: "account_lookup",
+      kit_http: sending.httpStatus || null,
+    });
+  }
+  if (!sending.verified) {
+    // Do not create/add subscribers when Kit cannot deliver the confirm email.
+    return json(503, {
+      ok: false,
+      error: "sending_not_ready",
+      sending_addresses: sending.addresses,
+    });
+  }
+
   const referrer = (body.referrer || request.headers.get("Referer") || "")
     .toString()
     .slice(0, 500);
@@ -321,6 +408,7 @@ export async function onRequestPost(context) {
       kit_http: result.httpStatus || null,
       kit_create_http: result.createHttp || null,
       subscriber_state: result.subscriberState || null,
+      doi_triggered: !!result.doiTriggered,
     });
   } catch {
     return json(502, {
