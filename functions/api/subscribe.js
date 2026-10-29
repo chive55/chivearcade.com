@@ -18,6 +18,10 @@ const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 5;
 const DEFAULT_KIT_FORM_ID = "10114495";
 const KIT_API_BASE = "https://api.kit.com/v4";
+const SENDING_CACHE_MS = 5 * 60 * 1000;
+
+/** Per-isolate cache for Kit sending-address readiness (no addresses stored). */
+let sendingReadyCache = null;
 
 /**
  * Cloudflare Turnstile always-pass TEST secret.
@@ -182,9 +186,18 @@ async function readKitSafe(res) {
 
 /**
  * Kit cannot deliver DOI / incentive email without a verified sending address.
- * Returns { ok, verified, addresses } — addresses omit nothing secret; never logs.
+ * Cached per isolate ~5 minutes. Never logs; never returns address list to callers
+ * that would echo it publicly.
  */
 async function checkKitSendingReady(apiKey) {
+  const now = Date.now();
+  if (
+    sendingReadyCache &&
+    now - sendingReadyCache.at < SENDING_CACHE_MS
+  ) {
+    return sendingReadyCache.result;
+  }
+
   const res = await fetch(KIT_API_BASE + "/account", {
     method: "GET",
     headers: {
@@ -199,26 +212,29 @@ async function checkKitSendingReady(apiKey) {
   } catch {
     data = null;
   }
+
+  let result;
   if (httpStatus < 200 || httpStatus >= 300 || !data || !data.account) {
-    return {
+    result = {
       ok: false,
       httpStatus,
       verified: false,
-      addresses: [],
       error: "account_lookup_failed",
     };
+  } else {
+    const raw = Array.isArray(data.account.sending_addresses)
+      ? data.account.sending_addresses
+      : [];
+    const verified = raw.some((s) => s && s.is_verified);
+    result = { ok: true, httpStatus, verified };
   }
-  const raw = Array.isArray(data.account.sending_addresses)
-    ? data.account.sending_addresses
-    : [];
-  const addresses = raw.map((s) => ({
-    email_address: typeof s.email_address === "string" ? s.email_address : null,
-    status: s.status || null,
-    is_default: !!s.is_default,
-    is_verified: !!s.is_verified,
-  }));
-  const verified = addresses.some((a) => a.is_verified);
-  return { ok: true, httpStatus, verified, addresses };
+
+  // Cache successes and "not verified" so we don't hammer Kit; do not cache
+  // hard lookup failures (brief outage should retry sooner).
+  if (result.ok) {
+    sendingReadyCache = { at: now, result };
+  }
+  return result;
 }
 
 /**
@@ -375,11 +391,8 @@ export async function onRequestPost(context) {
   }
   if (!sending.verified) {
     // Do not create/add subscribers when Kit cannot deliver the confirm email.
-    return json(503, {
-      ok: false,
-      error: "sending_not_ready",
-      sending_addresses: sending.addresses,
-    });
+    // Do not echo sending_addresses — that leaks account config.
+    return json(503, { ok: false, error: "sending_not_ready" });
   }
 
   const referrer = (body.referrer || request.headers.get("Referer") || "")
