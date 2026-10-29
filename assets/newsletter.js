@@ -90,7 +90,7 @@
             return;
           }
           var err = data.error || "";
-          if (err === "not_configured") {
+          if (err === "not_configured" || err === "turnstile_not_configured" || err === "sending_not_ready") {
             setMsg(msg, "err", "Signup is not live yet. Try again soon.");
           } else if (err === "invalid_email") {
             setMsg(msg, "err", "That email does not look right.");
@@ -100,12 +100,7 @@
             setMsg(msg, "err", "Please complete the check and try again.");
             resetTurnstile(form);
           } else if (err === "provider_error") {
-            var ks = data.kit_status || "";
-            if (ks === "quarantined") {
-              setMsg(msg, "err", "Kit blocked this signup as automated. Try again from the form, or email us.");
-            } else {
-              setMsg(msg, "err", "Signup did not go through. Try again.");
-            }
+            setMsg(msg, "err", "Signup did not go through. Try again.");
             resetTurnstile(form);
           } else {
             setMsg(msg, "err", "Something went wrong. Try again.");
@@ -132,9 +127,45 @@
     initAll();
   };
 
+  function loadTurnstileScript() {
+    if (window.turnstile) {
+      initAll();
+      return;
+    }
+    if (document.querySelector('script[data-nl-turnstile]')) return;
+    var s = document.createElement("script");
+    s.src =
+      "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onNewsletterTurnstileLoad";
+    s.async = true;
+    s.defer = true;
+    s.setAttribute("data-nl-turnstile", "1");
+    document.head.appendChild(s);
+  }
+
+  /** Load Turnstile after load so it does not contend with LCP (fonts/images). */
+  function scheduleTurnstile() {
+    function kick() {
+      var run = function () {
+        setTimeout(loadTurnstileScript, 1500);
+      };
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(run, { timeout: 2000 });
+      } else {
+        run();
+      }
+    }
+    if (document.readyState === "complete") kick();
+    else window.addEventListener("load", kick, { once: true });
+  }
+
+  // Bind forms early (submit works once Turnstile arrives); widget mounts on load.
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initAll);
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("form.nl-form").forEach(bindForm);
+      scheduleTurnstile();
+    });
   } else {
-    initAll();
+    document.querySelectorAll("form.nl-form").forEach(bindForm);
+    scheduleTurnstile();
   }
 })();

@@ -1,6 +1,6 @@
 /**
  * POST /api/subscribe
- * Newsletter signup: honeypot, Turnstile, rate limit, then Kit v4 API.
+ * Newsletter signup: rate limit, honeypot, Turnstile, then Kit v4 API.
  * No database. Emails and KIT_API_KEY are never logged.
  *
  * Kit v4 (authenticated with X-Kit-Api-Key):
@@ -23,15 +23,6 @@ const SENDING_CACHE_MS = 5 * 60 * 1000;
 /** Per-isolate cache for Kit sending-address readiness (no addresses stored). */
 let sendingReadyCache = null;
 
-/**
- * Cloudflare Turnstile always-pass TEST secret.
- * Docs: https://developers.cloudflare.com/turnstile/troubleshooting/testing/
- * ONLY used as a fallback when TURNSTILE_SECRET_KEY is unset AND the request
- * host ends with ".pages.dev" (preview). Never on production hosts.
- */
-const TURNSTILE_TEST_SECRET_ALWAYS_PASS =
-  "1x0000000000000000000000000000000AA";
-
 /** Best-effort in-memory map (per isolate). Cache API used when available. */
 const memHits = new Map();
 
@@ -53,26 +44,16 @@ function clientIp(request) {
   );
 }
 
-function requestHost(request) {
-  try {
-    return new URL(request.url).hostname.toLowerCase();
-  } catch {
-    return "";
-  }
-}
-
 /**
- * Resolve Turnstile secret: prefer env.TURNSTILE_SECRET_KEY.
- * Preview-only fallback: Cloudflare always-pass test secret on *.pages.dev.
+ * Resolve Turnstile secret from env only. Missing key → fail closed (503).
+ * No hostname-based test-secret fallback.
  */
-function resolveTurnstileSecret(env, host) {
-  if (env.TURNSTILE_SECRET_KEY) return env.TURNSTILE_SECRET_KEY;
-  if (host.endsWith(".pages.dev")) {
-    // PREVIEW ONLY — Cloudflare Turnstile always-pass TEST secret.
-    // Do not use on production. Replace by setting TURNSTILE_SECRET_KEY.
-    return TURNSTILE_TEST_SECRET_ALWAYS_PASS;
-  }
-  return null;
+function resolveTurnstileSecret(env) {
+  const key =
+    typeof env.TURNSTILE_SECRET_KEY === "string"
+      ? env.TURNSTILE_SECRET_KEY.trim()
+      : "";
+  return key || null;
 }
 
 async function parseBody(request) {
@@ -312,8 +293,26 @@ async function subscribeViaKitV4(email, formId, apiKey, referrer) {
   };
 }
 
+const MAX_BODY_BYTES = 8_192;
+
+function contentLengthTooLarge(request) {
+  const raw = request.headers.get("Content-Length");
+  if (raw == null || raw === "") return false;
+  const n = Number(raw);
+  return Number.isFinite(n) && n > MAX_BODY_BYTES;
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
+
+  if (contentLengthTooLarge(request)) {
+    return json(413, { ok: false, error: "bad_request" });
+  }
+
+  const ip = clientIp(request);
+  if (await rateLimited(ip)) {
+    return json(429, { ok: false, error: "rate_limited" });
+  }
 
   let body;
   try {
@@ -334,13 +333,7 @@ export async function onRequestPost(context) {
     return json(400, { ok: false, error: "invalid_email" });
   }
 
-  const ip = clientIp(request);
-  if (await rateLimited(ip)) {
-    return json(429, { ok: false, error: "rate_limited" });
-  }
-
-  const host = requestHost(request);
-  const turnstileSecret = resolveTurnstileSecret(env, host);
+  const turnstileSecret = resolveTurnstileSecret(env);
   if (!turnstileSecret) {
     return json(503, { ok: false, error: "turnstile_not_configured" });
   }
@@ -375,19 +368,10 @@ export async function onRequestPost(context) {
   try {
     sending = await checkKitSendingReady(apiKey);
   } catch {
-    return json(502, {
-      ok: false,
-      error: "provider_error",
-      kit_step: "account_lookup",
-    });
+    return json(502, { ok: false, error: "provider_error" });
   }
   if (!sending.ok) {
-    return json(502, {
-      ok: false,
-      error: "provider_error",
-      kit_step: "account_lookup",
-      kit_http: sending.httpStatus || null,
-    });
+    return json(502, { ok: false, error: "provider_error" });
   }
   if (!sending.verified) {
     // Do not create/add subscribers when Kit cannot deliver the confirm email.
@@ -407,28 +391,12 @@ export async function onRequestPost(context) {
       referrer || null
     );
     if (!result.ok) {
-      // 502; never include email, key, or Kit body.
-      return json(502, {
-        ok: false,
-        error: "provider_error",
-        kit_step: result.step || "unknown",
-        kit_http: result.httpStatus || null,
-        subscriber_state: result.subscriberState || null,
-      });
+      // 502; never include email, key, Kit codes, or subscriber state.
+      return json(502, { ok: false, error: "provider_error" });
     }
-    return json(200, {
-      ok: true,
-      kit_http: result.httpStatus || null,
-      kit_create_http: result.createHttp || null,
-      subscriber_state: result.subscriberState || null,
-      doi_triggered: !!result.doiTriggered,
-    });
+    return json(200, { ok: true });
   } catch {
-    return json(502, {
-      ok: false,
-      error: "provider_error",
-      kit_step: "exception",
-    });
+    return json(502, { ok: false, error: "provider_error" });
   }
 }
 
