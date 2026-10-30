@@ -274,7 +274,7 @@ function writeIndex(posts) {
     : `<p class="dl-empty">No posts yet. Check back soon.</p>`;
 
   const head = headCommon({
-    title: 'Devlog | Chive Arcade',
+    title: 'Vroom Boom Devlog: Build Notes and Progress | Chive Arcade',
     description: 'Devlog for Vroom Boom and other Chive Arcade games, with build notes, tips and progress.',
     url: SITE + '/devlog/',
     image: posts[0] ? coverOf(posts[0]).src : PLACEHOLDER.src,
