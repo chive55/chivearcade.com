@@ -11,3 +11,9 @@
 
 /devlog/feed.xml
   Content-Type: application/rss+xml; charset=utf-8
+
+/scrap-swarm/*
+  X-Robots-Tag: noindex, nofollow
+
+/night-shift-lab/*
+  X-Robots-Tag: noindex, nofollow
