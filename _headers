@@ -11,3 +11,6 @@
 
 /scrap-swarm/*
   X-Robots-Tag: noindex, nofollow
+
+/night-shift-lab/*
+  X-Robots-Tag: noindex, nofollow
