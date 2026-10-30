@@ -1,7 +1,7 @@
 ---
-title: "Vroom Boom: Rockets, Mines, Big Jumps and One More Car to Earn"
+title: "Vroom Boom Devlog: Rockets, Mines and Big Jumps"
 date: 2026-10-28
-slug: vroom-boom-rockets-mines-big-jumps-and-one-more-car-to-earn
+slug: vroom-boom-rockets-mines-and-big-jumps
 tags:
   - Vroom Boom
 cover: /devlog/assets/vroom-boom-rockets-mines-cover.jpg
