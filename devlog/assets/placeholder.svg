@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="Devlog">
+  <rect width="1200" height="675" fill="#111A38"/>
+  <rect x="40" y="40" width="1120" height="595" fill="none" stroke="#53E6FF" stroke-opacity=".25" stroke-width="2"/>
+  <text x="600" y="350" text-anchor="middle" fill="#53E6FF" font-family="system-ui,sans-serif" font-size="42" font-weight="700">CHIVE ARCADE</text>
+  <text x="600" y="400" text-anchor="middle" fill="#9AA7C7" font-family="system-ui,sans-serif" font-size="22">Devlog</text>
+</svg>

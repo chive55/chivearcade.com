@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Chive Arcade Devlog</title>
+    <link>https://chivearcade.com/devlog/</link>
+    <description>Build notes for Vroom Boom and other Chive Arcade games.</description>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 30 Oct 2026 12:00:11 GMT</lastBuildDate>
+    <item>
+      <title>Vroom Boom Devlog: Rockets, Mines and Big Jumps</title>
+      <link>https://chivearcade.com/devlog/vroom-boom-rockets-mines-and-big-jumps/</link>
+      <guid isPermaLink="true">https://chivearcade.com/devlog/vroom-boom-rockets-mines-and-big-jumps/</guid>
+      <pubDate>Wed, 28 Oct 2026 12:00:00 GMT</pubDate>
+      <description>Vroom Boom is arcade car combat coming to Steam in 2027, and the game is still in development. The idea is simple and loud: fight with rockets and mines, take big jumps, and keep moving.</description>
+      <category>Vroom Boom</category>
+    </item>
+  </channel>
+</rss>
