@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Shift Lab: Hospital Lab Horror | Chive Arcade</title>
+<meta name="description" content="A first-person hospital lab sim with light horror from Chive Arcade. Five nights on the bench, changing rules, anomalies, and a stalker. Made in Godot. In development.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#080B18">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site-nav.css">
+<link rel="canonical" href="https://chivearcade.com/night-shift-lab/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chive Arcade">
+<meta property="og:title" content="Night Shift Lab: Hospital Lab Horror | Chive Arcade">
+<meta property="og:description" content="A first-person hospital lab sim with light horror from Chive Arcade. Five nights on the bench, changing rules, anomalies, and a stalker. Made in Godot. In development.">
+<meta property="og:url" content="https://chivearcade.com/night-shift-lab/">
+<meta property="og:image" content="https://chivearcade.com/night-shift-lab/shot-lab.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Night Shift Lab: Hospital Lab Horror | Chive Arcade">
+<meta name="twitter:description" content="A first-person hospital lab sim with light horror from Chive Arcade. Five nights on the bench, changing rules, anomalies, and a stalker. Made in Godot. In development.">
+<meta name="twitter:image" content="https://chivearcade.com/night-shift-lab/shot-lab.webp">
+<link rel="preload" href="/night-shift-lab/shot-lab.webp" as="image" fetchpriority="high">
+<link rel="preload" href="/assets/fonts/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+  :root{
+    --bg:#080B18; --panel:#111A38; --cyan:#53E6FF; --yellow:#FFD85A; --pink:#FF4D68;
+    --text:#EAF2FF; --muted:#9AA7C7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    line-height:1.6; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(83,230,255,.16), transparent 60%),
+      radial-gradient(700px 420px at 90% 10%, rgba(255,77,104,.12), transparent 55%);
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding:0 20px; position:relative; z-index:1}
+  .site-head{min-height:76px; align-items:center}
+  .c{color:var(--cyan)}
+  .nsl-page{padding:10px 0 40px}
+  .nsl-hero{
+    display:block; width:100%; max-width:960px; margin:0 auto 18px;
+    border-radius:18px; border:1px solid rgba(83,230,255,.18);
+    overflow:hidden; background:#0c1224;
+  }
+  .nsl-hero img{display:block; width:100%; height:auto}
+  .nsl-shots{
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px; margin:0 0 28px;
+  }
+  .nsl-shot{
+    display:block; width:100%; border-radius:14px;
+    border:1px solid rgba(83,230,255,.14); overflow:hidden; background:#0c1224;
+  }
+  .nsl-shot img{display:block; width:100%; height:auto}
+  @media (max-width:700px){
+    .nsl-shots{grid-template-columns:1fr}
+  }
+  .nsl-page h1{
+    font-family:'Russo One',sans-serif; font-weight:400;
+    font-size:clamp(28px,5vw,44px); letter-spacing:.04em; text-align:center; margin:0 0 8px;
+  }
+  .nsl-page .lead{
+    text-align:center; color:var(--muted); max-width:640px; margin:0 auto 18px;
+    font-size:clamp(15px,1.8vw,18px);
+  }
+  .nsl-page .status{
+    text-align:center; color:var(--yellow); font-weight:700; font-size:14px;
+    letter-spacing:.04em; text-transform:uppercase; margin:0 0 28px;
+  }
+  .nsl-section{margin:28px 0}
+  .nsl-section h2{
+    font-family:'Russo One',sans-serif; font-weight:400;
+    font-size:clamp(20px,3vw,28px); letter-spacing:.03em; text-align:center; margin:0 0 14px;
+  }
+  .nsl-list{
+    list-style:none; max-width:640px; margin:0 auto; padding:0;
+    display:grid; gap:10px;
+  }
+  .nsl-list li{
+    background:rgba(17,26,56,.72); border:1px solid rgba(83,230,255,.14);
+    border-radius:14px; padding:12px 16px; color:var(--text); font-size:15px;
+  }
+  .nsl-list b{color:var(--cyan); font-weight:700}
+  .more{text-align:center; margin-top:28px; color:var(--muted); font-size:14px}
+  .more a{color:var(--cyan)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Night Shift Lab","url":"https://chivearcade.com/night-shift-lab/","description":"A first-person hospital lab sim with light horror from Chive Arcade. Five nights on the bench, changing rules, anomalies, and a stalker. Made in Godot. In development.","genre":["Horror","Simulation","First-Person"],"gamePlatform":"PC","author":{"@type":"Organization","name":"Chive Arcade","url":"https://chivearcade.com/"}}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head">
+    <a class="brand" href="/"><img src="/mark-80.png" width="65" height="40" alt=""><span>CHIVE <em>ARCADE</em></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav" aria-label="Main"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a class="nav-steam" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=nightshiftlab-page" target="_blank" rel="noopener">Wishlist on Steam</a></li></ul><ul class="site-social" aria-label="Chive Arcade on social media"><li><a href="https://x.com/ChiveArcade" target="_blank" rel="noopener">X</a></li><li><a href="https://www.tiktok.com/@chive.arcade" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.youtube.com/@ChiveArcade" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.instagram.com/chivearcade" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://bsky.app/profile/chivearcade.com" target="_blank" rel="noopener">Bluesky</a></li></ul></nav>
+  </header>
+
+<main id="main" class="nsl-page">
+  <!-- DRAFT COPY, pending CMO and Copy Humanizer review -->
+  <div class="nsl-hero">
+    <img src="/night-shift-lab/shot-lab.webp" width="1280" height="720" alt="Night Shift Lab hospital lab bench under cold fluorescent light" fetchpriority="high" decoding="async">
+  </div>
+  <h1>Night <span class="c">Shift Lab</span></h1>
+  <p class="lead">A first-person hospital lab sim with light horror. You are the only tech on the 0400 to 0700 shift for five nights. Run the specimens, follow the rules sheet (it changes every night), and report what is wrong with the lab.</p>
+  <p class="status">In development · PC · Made in Godot · Chive Arcade</p>
+
+  <section class="nsl-section" aria-labelledby="nsl-about-title">
+    <h2 id="nsl-about-title">About the <span class="c">game</span></h2>
+    <ul class="nsl-list">
+      <li><b>Five nights</b> on the 0400 to 0700 shift, with a new rules sheet each night and three endings on night 5.</li>
+      <li><b>Lab work first:</b> daily QC, tube intake, analyzers, the LIS terminal, critical calls, and blood bank crossmatch.</li>
+      <li><b>17 room anomalies</b> and <b>13 specimen anomalies</b>, plus HIL rejects, criticals, crossmatches, and bad QC.</li>
+      <li><b>A stalker</b> from night 2 on. Hold the flashlight on it early; on nights 4 and 5, turn the light off.</li>
+      <li><b>Phases escalate</b> from Settling In to Restless to Surge, with dread that can end the shift.</li>
+      <li><b>Full controller support</b>, plus save/continue and settings.</li>
+      <li><b>Overtime</b> unlocks after night 5: endless waves with no 07:00 cutoff.</li>
+    </ul>
+  </section>
+
+  <section class="nsl-section" aria-labelledby="nsl-shots-title">
+    <h2 id="nsl-shots-title">Screenshots</h2>
+    <div class="nsl-shots">
+      <div class="nsl-shot">
+        <img src="/night-shift-lab/shot-hall.webp" width="1280" height="720" alt="Dim hospital hallway in Night Shift Lab" loading="lazy" decoding="async">
+      </div>
+      <div class="nsl-shot">
+        <img src="/night-shift-lab/shot-fridge.webp" width="1280" height="720" alt="Blood bank fridge with glass door in the lab" loading="lazy" decoding="async">
+      </div>
+      <div class="nsl-shot">
+        <img src="/night-shift-lab/shot-scare.webp" width="1280" height="720" alt="A scare moment in the Night Shift Lab corridors" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <p class="more"><a href="/">Back to Chive Arcade</a> · <a href="/#vroom-boom">Vroom Boom</a></p>
+</main>
+
+  <footer class="site-foot">
+    <nav aria-label="Footer"><ul><li><a href="/#vroom-boom">Vroom Boom</a></li><li><a href="/games/">Browser Games</a></li><li><a href="/#devlog">Devlog</a></li><li><a href="/about/">About</a></li><li><a href="mailto:chivearcade@gmail.com">Contact</a></li><li><a href="/privacy.html">Privacy</a></li></ul></nav>
+    <p><a href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom" target="_blank" rel="noopener">Vroom Boom is coming to Steam: wishlist now</a></p>
+    <p><a href="https://x.com/ChiveArcade">X</a> · <a href="https://www.tiktok.com/@chive.arcade">TikTok</a> · <a href="https://www.youtube.com/@ChiveArcade">YouTube</a> · <a href="https://www.instagram.com/chivearcade">Instagram</a> · <a href="https://bsky.app/profile/chivearcade.com">Bluesky</a> · <a href="https://chive-arcade.itch.io">itch.io</a> · <a href="https://github.com/chive55">GitHub</a></p>
+    <p>© <span id="foot-year">2026</span> Chive Arcade</p>
+  </footer>
+</div>
+<a class="sticky-wish" href="https://store.steampowered.com/app/5446380/?utm_source=chivearcade&amp;utm_medium=site&amp;utm_campaign=vroomboom&amp;utm_content=nightshiftlab-page" target="_blank" rel="noopener">&#9733; Wishlist on Steam</a>
+<script src="/assets/site-nav.js" defer></script>
+</body>
+</html>
