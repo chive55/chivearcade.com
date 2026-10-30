@@ -1,5 +1,5 @@
 /* Shared Chive Arcade header nav + footer */
-.site-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;position:relative;z-index:5}
+.site-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;position:relative;z-index:5;min-height:76px}
 .site-head .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#EAF2FF}
 .site-head .brand img{height:40px;width:auto}
 .site-head .brand span{font-family:'Russo One',sans-serif;font-weight:400;letter-spacing:1.5px;font-size:15px;white-space:nowrap}

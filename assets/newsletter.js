@@ -35,6 +35,16 @@
     var wid = window.turnstile.render(mount, {
       sitekey: TURNSTILE_SITE_KEY,
       theme: "dark",
+      size: "flexible",
+      "expired-callback": function () {
+        resetTurnstile(form);
+      },
+      "timeout-callback": function () {
+        resetTurnstile(form);
+      },
+      "error-callback": function () {
+        resetTurnstile(form);
+      },
     });
     form.dataset.widgetId = wid;
   }
@@ -49,6 +59,15 @@
 
     ensureTurnstile(form);
 
+    function kickTurnstileEarly() {
+      loadTurnstileScript();
+      ensureTurnstile(form);
+    }
+    if (email) {
+      email.addEventListener("focus", kickTurnstileEarly, { once: true });
+    }
+    form.addEventListener("pointerdown", kickTurnstileEarly, { once: true });
+
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
       if (!email) return;
@@ -59,11 +78,18 @@
         return;
       }
 
+      kickTurnstileEarly();
+      var token = getToken(form);
+      if (!token) {
+        setMsg(msg, "err", "Please complete the check and try again.");
+        return;
+      }
+
       var honey = qs(form, 'input[name="website"]');
       var payload = {
         email: value,
         website: honey ? honey.value : "",
-        "cf-turnstile-response": getToken(form),
+        "cf-turnstile-response": token,
         referrer: location.href,
       };
 
@@ -76,9 +102,14 @@
         body: JSON.stringify(payload),
       })
         .then(function (res) {
-          return res.json().then(function (data) {
-            return { res: res, data: data || {} };
-          });
+          return res.json().then(
+            function (data) {
+              return { res: res, data: data || {} };
+            },
+            function () {
+              return { res: res, data: {} };
+            }
+          );
         })
         .then(function (_ref) {
           var res = _ref.res;
@@ -109,6 +140,7 @@
         })
         .catch(function () {
           setMsg(msg, "err", "Network error. Try again.");
+          resetTurnstile(form);
         })
         .finally(function () {
           if (btn) btn.disabled = false;
@@ -139,6 +171,11 @@
     s.async = true;
     s.defer = true;
     s.setAttribute("data-nl-turnstile", "1");
+    s.onerror = function () {
+      document.querySelectorAll("form.nl-form .nl-msg").forEach(function (el) {
+        setMsg(el, "err", "Security check failed to load. Refresh and try again.");
+      });
+    };
     document.head.appendChild(s);
   }
 

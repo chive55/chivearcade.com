@@ -59,7 +59,7 @@
   overflow:hidden!important;
   opacity:0!important;
 }
-.nl-turnstile{min-height:70px}
+.nl-turnstile{min-height:70px;max-width:100%;overflow:hidden}
 /* Compact footer variant */
 .nl-foot{
   margin:14px auto 10px;
@@ -83,4 +83,9 @@
 .nl-foot .nl-turnstile{transform:scale(.85);transform-origin:left top;min-height:65px}
 @media(max-width:520px){
   .nl-row button{width:100%}
+}
+@media(max-width:480px){
+  .nl-box{padding:14px 12px 12px}
+  .nl-foot{padding:10px 10px}
+  .nl-foot .nl-turnstile{transform:scale(.78);transform-origin:left top}
 }
