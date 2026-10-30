@@ -5,7 +5,7 @@
 <script>document.documentElement.classList.add('js');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scrap Swarm | Chive Arcade</title>
-<meta name="description" content="Scrap Swarm is a 10-minute bot survivor game from Chive Arcade. Weld maxed weapons into new ones. Made in Godot. In active development.">
+<meta name="description" content="Scrap Swarm is a survivors-style arena game from Chive Arcade. Survive 10 minutes of junk robots, level up, and weld maxed weapons into stronger ones. Made in Godot 4 for PC. In active development.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#080B18">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -16,11 +16,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Chive Arcade">
 <meta property="og:title" content="Scrap Swarm | Chive Arcade">
-<meta property="og:description" content="Scrap Swarm is a 10-minute bot survivor game from Chive Arcade. Weld maxed weapons into new ones. Made in Godot. In active development.">
+<meta property="og:description" content="Scrap Swarm is a survivors-style arena game from Chive Arcade. Survive 10 minutes of junk robots, level up, and weld maxed weapons into stronger ones. Made in Godot 4 for PC. In active development.">
 <meta property="og:url" content="https://chivearcade.com/scrap-swarm/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Scrap Swarm | Chive Arcade">
-<meta name="twitter:description" content="Scrap Swarm is a 10-minute bot survivor game from Chive Arcade. Weld maxed weapons into new ones. Made in Godot. In active development.">
+<meta name="twitter:description" content="Scrap Swarm is a survivors-style arena game from Chive Arcade. Survive 10 minutes of junk robots, level up, and weld maxed weapons into stronger ones. Made in Godot 4 for PC. In active development.">
 <link rel="preload" href="/assets/fonts/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts.css">
@@ -86,11 +86,20 @@
     font-family:'Russo One',sans-serif; font-weight:400;
     font-size:clamp(20px,3vw,28px); letter-spacing:.03em; text-align:center; margin:0 0 14px;
   }
+  .ss-list{
+    list-style:none; max-width:640px; margin:0 auto; padding:0;
+    display:grid; gap:10px;
+  }
+  .ss-list li{
+    background:rgba(17,26,56,.72); border:1px solid rgba(83,230,255,.14);
+    border-radius:14px; padding:12px 16px; color:var(--text); font-size:15px;
+  }
+  .ss-list b{color:var(--cyan); font-weight:700}
   .more{text-align:center; margin-top:28px; color:var(--muted); font-size:14px}
   .more a{color:var(--cyan)}
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"VideoGame","name":"Scrap Swarm","url":"https://chivearcade.com/scrap-swarm/","description":"A 10-minute bot survivor game where you weld maxed weapons into new ones. Made in Godot by Chive Arcade. In active development.","genre":["Survivor","Action","Arcade"],"author":{"@type":"Organization","name":"Chive Arcade","url":"https://chivearcade.com/"}}
+{"@context":"https://schema.org","@type":"VideoGame","name":"Scrap Swarm","url":"https://chivearcade.com/scrap-swarm/","description":"A survivors-style arena game where you survive 10 minutes of junk robots, level up, and weld two maxed weapons into a stronger one. Made in Godot 4 by Chive Arcade for PC. In active development.","genre":["Survivor","Action","Arcade"],"gamePlatform":"PC","author":{"@type":"Organization","name":"Chive Arcade","url":"https://chivearcade.com/"}}
 </script>
 </head>
 <body>
@@ -109,8 +118,21 @@
     <span class="ss-label">Key art placeholder</span>
   </div>
   <h1>Scrap <span class="c">Swarm</span></h1>
-  <p class="lead">A 10-minute bot survivor game where you weld maxed weapons into new ones. Made in Godot by Chive Arcade.</p>
-  <p class="status">In active development</p>
+  <p class="lead">A survivors-style arena game. Survive 10 minutes of junk robots, level up, and weld two maxed weapons into a stronger one.</p>
+  <p class="status">In active development · PC · Godot 4 · Chive Arcade</p>
+
+  <section class="ss-section" aria-labelledby="ss-about-title">
+    <h2 id="ss-about-title">About the <span class="c">game</span></h2>
+    <ul class="ss-list">
+      <li><b>3 bots:</b> Scrapper, Tinker, and Volt.</li>
+      <li><b>8 weapons</b> and <b>6 welds</b> that fuse two maxed weapons into a stronger one.</li>
+      <li><b>8 synergy overdrives</b> to push a build further.</li>
+      <li><b>3 arenas:</b> Junkyard, Foundry, and Storm Yard.</li>
+      <li><b>Elites and bosses</b> show up late in a run.</li>
+      <li><b>Workshop</b> with 9 meta upgrades between runs.</li>
+      <li><b>Difficulty</b> from Rookie up to tier 4.</li>
+    </ul>
+  </section>
 
   <section class="ss-section" aria-labelledby="ss-trailer-title">
     <h2 id="ss-trailer-title">Trailer</h2>
