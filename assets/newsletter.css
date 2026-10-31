@@ -46,7 +46,7 @@
 .nl-row button:hover,.nl-btn:hover{filter:brightness(1.06)}
 .nl-row button:disabled{opacity:.6;cursor:wait}
 .nl-consent{margin:0;font-size:12px;color:var(--muted,#9AA7C7);line-height:1.45}
-.nl-consent a{color:var(--cyan,#53E6FF)}
+.nl-consent a{color:var(--cyan,#53E6FF);text-decoration:underline}
 .nl-msg{margin:0;font-size:14px;min-height:1.4em}
 .nl-msg[data-state="ok"]{color:#7dffb3}
 .nl-msg[data-state="err"]{color:#FF4D68}
