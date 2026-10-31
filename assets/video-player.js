@@ -36,7 +36,7 @@
     var name = videoName(video);
     btn.setAttribute(
       "aria-label",
-      playing ? "Pause " + name : "Play " + name
+      playing ? "Pause video: " + name : "Play video: " + name
     );
   }
 
@@ -50,7 +50,7 @@
     btn.type = "button";
     btn.className = "vb-video-toggle";
     btn.textContent = "Play video";
-    btn.setAttribute("aria-label", "Play " + videoName(video));
+    btn.setAttribute("aria-label", "Play video: " + videoName(video));
     host.appendChild(btn);
     return btn;
   }
